@@ -1,8 +1,8 @@
 Package: different
-Title: What the Package Does (one line, title case)
+Title: Compare Differences in Data Frames
 Version: 0.0.0.9000
 Authors@R: person("Garrick", "Aden-Buie", email = "Garrick.Aden-Buie@moffitt.org", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: Tools for comparing and resolving differences between data frames.
 Depends: R (>= 3.5.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
