@@ -1,0 +1,44 @@
+.main-header .logo {
+  width: 300px;
+}
+
+.main-header .navbar {
+  margin-left: 300px;
+}
+
+td, th {
+  padding-left: 15px;
+  vertical-align: middle;
+  border-bottom: 1px solid #3C8DBC33;
+}
+
+.match-columns-table {
+  min-width: 625px;
+  max-width: 1200px;
+  width: 100%;
+  table-layout: fixed;
+}
+.match-columns-box {
+  overflow-x: scroll;
+}
+.match-columns-right .selectize-control {
+  height: 19px;
+}
+.match-columns-left, .match-columns-right {
+  width: 37.5%;
+  display: table-cell;
+}
+.match-columns-status {
+  width: 18px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: top;
+  padding-top: 7px;
+}
+.match-columns-action {
+  width: 25%;
+  display: table-cell;
+}
+.sidebar-text {
+  padding-left: 12px;
+}

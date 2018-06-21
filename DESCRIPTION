@@ -14,7 +14,10 @@ Imports:
     pillar,
     purrr,
     rlang (>= 0.1.2),
-    tidyr
+    tidyr,
+    shiny,
+    shinyjs,
+    shinytoastr
 Suggests: 
     knitr,
     rmarkdown,
