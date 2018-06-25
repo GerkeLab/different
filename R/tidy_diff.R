@@ -211,7 +211,7 @@ summary.tidy_diff <- function(z) {
     if (nchar(x) > getOption("width")) x <- paste0(strtrim(x, getOption("width")), "...\033[0m")
     cli::cat_bullet(x, ...)
   }
-  style_vars <- function(x) pillar::style_subtle(glue::glue_collapse(glue("`{x}`"), sep = ", "))
+  style_vars <- function(x) pillar::style_subtle(glue::glue_collapse(glue::glue("`{x}`"), sep = ", "))
 
   cat_thing_w_count <- function(thing, values, styler = crayon::bold) {
     if (!length(values)) return(invisible())
