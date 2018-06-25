@@ -4,6 +4,7 @@ output:
     df_print: paged
 params:
   df_diff: NULL
+  use_plotly: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -36,7 +37,11 @@ summary(df_diff)
 ## Visualization
 
 ```{r visualization, out.width="100%"}
-plot(df_diff)
+if (params$use_plotly && requireNamespace("plotly", quietly = TRUE)) {
+  plotly::ggplotly(plot(df_diff))
+} else {
+  plot(df_diff)
+}
 ```
 
 ## Differences by Column {.tabset .tabset-fade .tabset-pills}

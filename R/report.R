@@ -1,7 +1,14 @@
 #' Differences Report
 #'
 #' @export
-report <- function(reference, comparison, df_names = NULL, outfile = NULL, ...) {
+report <- function(
+  reference,
+  comparison,
+  df_names = NULL,
+  outfile = NULL,
+  use_plotly = TRUE,
+  ...
+) {
   df_names <- df_names %||% paste(sys.call())[2:3]
 
   specified_destination <- !is.null(outfile)
@@ -15,7 +22,7 @@ report <- function(reference, comparison, df_names = NULL, outfile = NULL, ...) 
     input = system.file("report.Rmd", package = "different"),
     output_file = outfile,
     output_dir = outdir,
-    params = list(df_diff = df_diff)
+    params = list(df_diff = df_diff, use_plotly = use_plotly)
   )
   if (rstudioapi::isAvailable()) {
     rstudioapi::viewer(rpt)

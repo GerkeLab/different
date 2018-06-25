@@ -18,11 +18,11 @@ Imports:
     shiny,
     shinyjs,
     shinytoastr,
-    plotly
-Suggests: 
     knitr,
-    rmarkdown,
-    testthat
+    rmarkdown
+Suggests: 
+    testthat,
+    plotly
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
