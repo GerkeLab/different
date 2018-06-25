@@ -13,13 +13,18 @@
 #' @return Object of class `tidy_diff` that can be printed via `print(obj)` or
 #'   plotted with [ggplot2] via `plot(obj)`.
 #' @export
-tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, tolerance = .Machine$double.eps) {
+tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, df_names = NULL, tolerance = .Machine$double.eps) {
   # x <- arrange(x, .id)
-  x_name = rlang::quo_name(rlang::enquo(x))
-  y_name = rlang::quo_name(rlang::enquo(y))
+  if (is.null(df_names)) {
+    df_names <- c(x = "",  y = "")
+    df_names["x"] = rlang::quo_name(rlang::enquo(x))
+    df_names["y"] = rlang::quo_name(rlang::enquo(y))
+  } else {
+    if (is.null(names(df_names))) names(df_names) <- c("x", "y")
+  }
 
   meta <- list()
-  meta$names <- c(x = x_name, y = y_name)
+  meta$names <- df_names[c("x", "y")]
   meta$dims <- purrr::map(list(x = x, y = y), ~ dim(.))
   meta$colnames <- purrr::map(list(x = x, y = y), ~ colnames(.))
   meta$coltypes <- purrr::map(list(x = x, y = y), ~ purrr::map_chr(., ~ class(.)[1]))
