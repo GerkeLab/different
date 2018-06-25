@@ -3,14 +3,13 @@ output:
   html_document:
     df_print: paged
 params:
-  df_ref: NULL
-  df_cmp: NULL
-  df_names: NULL
+  df_diff: NULL
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
-                      rownames.print = FALSE, rows.print = 10)
+                      rownames.print = FALSE, rows.print = 10,
+                      fig.height = 6, fig.width = 9)
 knitr::knit_hooks$set(width=local({
     .width <- 0
     function(before, options, envir) {
@@ -21,10 +20,9 @@ knitr::knit_hooks$set(width=local({
 library(different)
 ```
 
-```{r}
-df_ref <- params$df_ref
-df_cmp <- params$df_cmp
-df_diff <- tidy_diff(df_ref, df_cmp)
+```{r diff-from-params, include = FALSE}
+stopifnot(!is.null(df_diff))
+df_diff <- params$df_diff
 ```
 
 # Differences Report {.tabset}
@@ -37,7 +35,7 @@ summary(df_diff)
 
 ## Visualization
 
-```{r visualization}
+```{r visualization, out.width="100%"}
 plot(df_diff)
 ```
 
@@ -50,7 +48,9 @@ for (colname in names(df_diff$tidy)) {
     text = c(
       "### {{colname}}",
       "```{r, echo = FALSE}",
-      "df_diff$tidy[['{{colname}}']]",
+      "x <- df_diff$tidy[['{{colname}}']]",
+      "colnames(x)[2:3] <- df_diff$meta$names",
+      "x",
       "```")
   )
 }
