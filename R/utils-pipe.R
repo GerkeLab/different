@@ -15,4 +15,5 @@ NULL
 #' @keywords internal
 #' @export
 #' @usage lhs %||% rhs
+#' @rdname null_or
 `%||%` <- function(x, y) if (is.null(x)) y else x
