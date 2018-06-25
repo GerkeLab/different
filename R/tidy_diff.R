@@ -169,14 +169,15 @@ plot.tidy_diff <- function(z) {
     }
 }
 
-not_equal <- function(x, y) {
+not_equal <- function(x, y, tolerance = .Machine$double.eps) {
   # Check class of x and y and if not the same then hope for the best
   if (!identical(class(x), class(y))) class(y) <- class(x)
-  switch(
-    class(x),
-    "double" = which(abs(x - y) > .Machine$double.eps),
-    which(x != y)
-  )
+  this_class <- class(x)
+  if (this_class %in% c("double", "numeric")) {
+    which(abs(x - y) >= tolerance)
+  } else {
+    which(!purrr::map2_lgl(x, y, identical))
+  }
 }
 
 #' @export
