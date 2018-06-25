@@ -17,7 +17,8 @@ Imports:
     tidyr,
     shiny,
     shinyjs,
-    shinytoastr
+    shinytoastr,
+    plotly
 Suggests: 
     knitr,
     rmarkdown,

@@ -155,12 +155,39 @@ vis_changed <- function(x, y, ...) {
 plot.tidy_diff <- function(z) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   x_row_ids <- 1:z$meta$dims$x[1]
+
+  # Create labels for plotly
+  z_labels <- purrr::map_dfr(
+    z$tidy,
+    ~ mutate(
+      ., label = glue::glue_data(., "{z$meta$names[1]}: {value.x}\n{z$meta$names[2]}: {value.y}\n"),
+      label = paste(label)
+    ) %>%
+      select(-value.x:-value.y)
+  )
+  z_id_vars <- tidyselect::vars_select(names(z_labels), miss_index:label)
+  z_id_vars <- z_id_vars[c(-length(z_id_vars), -1)] # remove miss_index and label
+  if (length(z_id_vars)) {
+    # Hacky but I don't know the ID var names ahead of time
+    z_labels$id_labels <- apply(z_labels, 1, function(x) {
+      label <- ""
+      for (id in z_id_vars) {
+        label <- paste0(label, "\n", id, ": ", x[id])
+      }
+      label
+    })
+  } else z_labels$id_labels <- ""
+  z_labels <- z_labels %>%
+    mutate(label = paste0(label, id_labels)) %>%
+    select(variable, miss_index, label)
+
   z$diff %>%
     select(variable, state, id = misses) %>%
     tidyr::unnest() %>%
+    left_join(z_labels, by = c("variable", id = "miss_index")) %>%
     {
       ggplot2::ggplot(.) +
-        ggplot2::aes(x = variable, y = -id, color = state) +
+        ggplot2::aes(x = variable, y = -id, color = state, text = label) +
         ggplot2::geom_point(shape = 16) +
         ggplot2::scale_fill_manual(values = c("same" = "lightsteelblue1",
                                               "diff" = "firebrick3")) +
