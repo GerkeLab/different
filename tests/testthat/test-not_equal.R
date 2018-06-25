@@ -12,6 +12,9 @@ test_that("not_equal() considers NA as different", {
   right <- left
   right[c(1, 5, 7)] <- NA
   expect_equal(not_equal(left, right), c(1, 5, 7))
+
+  z <- tidy_diff(tibble::data_frame(col1 = left), tibble::data_frame(col1 = right))
+  expect_equal(z$tidy$col1$miss_index, c(1, 5, 7))
 })
 
 test_that("not_equal() considers NAs as equal", {
@@ -20,6 +23,9 @@ test_that("not_equal() considers NAs as equal", {
   right[c(1, 5, 7)] <- NA
   left[c(1,5,7)] <- NA
   expect_equal(not_equal(left, right), integer(0))
+
+  z <- tidy_diff(tibble::data_frame(col1 = left), tibble::data_frame(col1 = right))
+  expect_equal(z$tidy$col1, NULL)
 })
 
 test_that("not_equal() handles doubles/numeric", {
@@ -27,4 +33,7 @@ test_that("not_equal() handles doubles/numeric", {
   right <- left + sample(-1:1, 10, replace = TRUE) * .Machine$double.eps * 0.5
   right[c(1, 5, 7)] <- right[c(1, 5, 7)] + .Machine$double.eps * 2
   expect_equal(not_equal(left, right), c(1, 5, 7))
+
+  z <- tidy_diff(tibble::data_frame(col1 = left), tibble::data_frame(col1 = right))
+  expect_equal(z$tidy$col1$miss_index, c(1, 5, 7))
 })

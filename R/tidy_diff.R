@@ -45,9 +45,8 @@ tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE) {
   yt <- purrr::map_dfr(y, ~ data_frame(value = list(.)), .id = "variable")
   z <- full_join(xt, yt, by = "variable") %>%
     mutate(
-      misses     = purrr::map2(value.x, value.y, ~ not_equal(..1, ..2)),
-      misses     = purrr::map2(misses, value.x, ~ union(..1, which(is.na(..2)))),
-      misses     = purrr::map2(misses, value.y, ~ union(..1, which(is.na(..2)))),
+      misses     = purrr::map2(value.x, value.y, ~ not_equal(..1, ..2, tolerance)),
+      misses     = purrr::pmap(list(misses, value.x, value.y), ~ union(..1, which(xor(is.na(..2), is.na(..3))))),
       misses     = purrr::map(misses, sort),
       miss_count = purrr::map_int(misses, length),
       miss_count = ifelse(purrr::map_lgl(value.x, is.null), NA, miss_count),
