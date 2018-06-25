@@ -13,7 +13,7 @@
 #' @return Object of class `tidy_diff` that can be printed via `print(obj)` or
 #'   plotted with [ggplot2] via `plot(obj)`.
 #' @export
-tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE) {
+tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, tolerance = .Machine$double.eps) {
   # x <- arrange(x, .id)
   x_name = rlang::quo_name(rlang::enquo(x))
   y_name = rlang::quo_name(rlang::enquo(y))

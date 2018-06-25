@@ -4,7 +4,8 @@
 \alias{tidy_diff}
 \title{Compare Two Data.Frames}
 \usage{
-tidy_diff(x, y, ignore = NULL, group_vars = ignore, align = FALSE)
+tidy_diff(x, y, ignore = NULL, group_vars = ignore, align = FALSE,
+  tolerance = .Machine$double.eps)
 }
 \arguments{
 \item{x}{\code{<tbl|df>} Reference data frame}
