@@ -125,7 +125,7 @@ print.tidy_diff <- function(z, n = 5) {
 
   n <- min(length(z_tidy), n)
   if (n == 0) {
-    cli::cat_line(glue::glue("There were no differences found bewtween {paste0('`', zs$meta$names, '`', collapse = ' and ')}"))
+    cli::cat_line(glue::glue("There were no differences found bewtween {paste0('`', z$meta$names, '`', collapse = ' and ')}"))
     return(invisible())
   }
   cli::cat_line(pillar::style_subtle(glue::glue("Showing differences in first {n} columns...\n\n")))
