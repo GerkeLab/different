@@ -57,8 +57,8 @@ tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, d
       miss_count = ifelse(purrr::map_lgl(value.x, is.null), NA, miss_count),
       miss_count = ifelse(purrr::map_lgl(value.y, is.null), NA, miss_count),
       state      = ifelse(miss_count == 0, "same", "diff"),
-      state      = ifelse(purrr::map_lgl(value.x, is.null), "unique_x", state),
-      state      = ifelse(purrr::map_lgl(value.y, is.null), "unique_y", state),
+      state      = ifelse(purrr::map_lgl(value.x, is.null), "unique_y", state),
+      state      = ifelse(purrr::map_lgl(value.y, is.null), "unique_x", state),
       state      = ifelse(grepl("^_row\\.", variable), "same", state)             # Manually move row indices to "same" group
     ) %>%
     split(.$state)
