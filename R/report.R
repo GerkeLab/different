@@ -7,6 +7,7 @@ report <- function(
   df_names = NULL,
   outfile = NULL,
   use_plotly = TRUE,
+  quiet = TRUE,
   ...
 ) {
   df_names <- df_names %||% paste(sys.call())[2:3]
@@ -22,7 +23,8 @@ report <- function(
     input = system.file("report.Rmd", package = "different"),
     output_file = outfile,
     output_dir = outdir,
-    params = list(df_diff = df_diff, use_plotly = use_plotly)
+    params = list(df_diff = df_diff, use_plotly = use_plotly),
+    quiet = quiet
   )
   if (rstudioapi::isAvailable()) {
     rstudioapi::viewer(rpt)
