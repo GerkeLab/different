@@ -27,9 +27,9 @@ report <- function(
   if (rstudioapi::isAvailable()) {
     rstudioapi::viewer(rpt)
     if (specified_destination) {
-      cli::cat_line("Output saved to ", file.path(output_dir, output_file))
+      cli::cat_line("Output saved to ", file.path(outdir, outfile))
     }
   } else {
-    cli::cat_line("Cannot open viewer via RStudio. Report was saved to ", file.path(output_dir, output_file))
+    cli::cat_line("Cannot open viewer via RStudio. Report was saved to ", file.path(outdir, outfile))
   }
 }
