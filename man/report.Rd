@@ -4,7 +4,8 @@
 \alias{report}
 \title{Differences Report}
 \usage{
-report(reference, comparison, df_names = NULL, outfile = NULL, ...)
+report(reference, comparison, df_names = NULL, outfile = NULL,
+  use_plotly = TRUE, ...)
 }
 \description{
 Differences Report
