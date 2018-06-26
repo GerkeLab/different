@@ -2,6 +2,8 @@
 output: 
   html_document:
     df_print: paged
+    self_contained: TRUE
+    css: report.css
 params:
   df_diff: NULL
   use_plotly: TRUE
@@ -31,9 +33,7 @@ df_diff <- params$df_diff
 ## Summary
 
 
-<details>
-<summary>Dimensions</summary>
-
+<details><summary>Dimensions</summary>
 ```{r summary-dimensions}
 purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
     ~ dplyr::data_frame(Rows = .[1], Columns = .[2]), .id = "Data Set") %>% 
@@ -79,7 +79,8 @@ purrr::map2(
 
 </details>
 
-<details><summary>Differences Summary</summary>
+<details>
+<summary>Differences Summary</summary>
 
 ```{r summary-diff}
 df_diff$diff %>% 

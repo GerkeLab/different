@@ -1,0 +1,19 @@
+details[open] SUMMARY ~ * {
+  animation: sweep .5s ease-in-out;
+}
+@keyframes sweep {
+  0% {opacity: 0; margin-top: -25px}
+  100% {opacity: 1; margin-top: 0px}
+}
+details summary {
+  font-size: 1.25em;
+  font-weight: 500;
+}
+details summary:before {
+  font-family: "Consolas";
+  content: "\25b8  ";
+}
+details[open] summary:before {
+  font-family: "Consolas";
+  content: "\25be  ";
+}
