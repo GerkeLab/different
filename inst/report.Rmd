@@ -30,9 +30,74 @@ df_diff <- params$df_diff
 
 ## Summary
 
-```{r summary, comment="", width=90}
-summary(df_diff)
+
+<details>
+<summary>Dimensions</summary>
+
+```{r summary-dimensions}
+purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
+    ~ dplyr::data_frame(Rows = .[1], Columns = .[2]), .id = "Data Set") %>% 
+  knitr::kable()
 ```
+
+</details>
+
+
+<details>
+<summary>Columns</summary>
+
+```{r summary-columns}
+purrr::map2(
+  df_diff$meta$colnames, 
+  df_diff$meta$coltypes, 
+  ~ dplyr::data_frame(Column = .x, Type = .y)
+) %>% 
+  purrr::reduce(
+    full_join, 
+    suffix = paste("", c(df_diff$meta$names[1], df_diff$meta$names[2])),
+    by = "Column"
+  ) %>% 
+  {
+    .x <- .
+    type_var <- paste("Type", df_diff$meta$names[2])
+    if (type_var %in% names(.x)) {
+      type_var_y <- rlang::sym(type_var)
+      type_var_x <- rlang::sym(paste("Type", df_diff$meta$names[1]))
+      dplyr::mutate(
+        .x, 
+        !!type_var_y := ifelse(!is.na(!!type_var_y) & !is.na(!!type_var_x) & !!type_var_y != !!type_var_x, 
+                               paste0('<span style="color: red">', !!type_var_y, "</span>"), 
+                               !!type_var_y))
+    } else .x
+  } %>% 
+  dplyr::mutate_at(
+    dplyr::vars(dplyr::starts_with("Type")),
+    function(x) ifelse(is.na(x), "\U274C", x)
+  ) %>% 
+  knitr::kable(escape = FALSE)
+```
+
+</details>
+
+<details><summary>Differences Summary</summary>
+
+```{r summary-diff}
+df_diff$diff %>% 
+  dplyr::select(-misses) %>% 
+  dplyr::mutate(
+    state = dplyr::case_when(
+      stringr::str_detect(state, "unique_x") ~ paste("unique", df_diff$meta$names[1]),
+      stringr::str_detect(state, "unique_y") ~ paste("unique", df_diff$meta$names[2]),
+      TRUE ~ state
+    ),
+    miss_count = ifelse(is.na(miss_count), "", paste(miss_count))
+  ) %>% 
+  knitr::kable(
+    col.names = c("Column", "Difference", "Number of Differences")
+  )
+```
+
+</details>
 
 ## Visualization
 
