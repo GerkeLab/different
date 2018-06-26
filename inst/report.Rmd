@@ -31,8 +31,9 @@ df_diff <- params$df_diff
 ## Summary
 
 
-<details>
-<summary>Dimensions</summary>
+<!-- <details> -->
+<!-- <summary>Dimensions</summary> -->
+### Dimensions
 
 ```{r summary-dimensions}
 purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
@@ -40,11 +41,12 @@ purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
   knitr::kable()
 ```
 
-</details>
+<!-- </details> -->
 
 
-<details>
-<summary>Columns</summary>
+<!-- <details> -->
+<!-- <summary>Columns</summary> -->
+### Columns
 
 ```{r summary-columns}
 purrr::map2(
@@ -77,9 +79,10 @@ purrr::map2(
   knitr::kable(escape = FALSE)
 ```
 
-</details>
+<!-- </details> -->
 
-<details><summary>Differences Summary</summary>
+<!-- <details><summary>Differences Summary</summary> -->
+### Summary
 
 ```{r summary-diff}
 df_diff$diff %>% 
@@ -97,7 +100,7 @@ df_diff$diff %>%
   )
 ```
 
-</details>
+<!-- </details> -->
 
 ## Visualization
 
