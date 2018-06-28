@@ -132,7 +132,8 @@ print.tidy_diff <- function(z, n = 5) {
     cli::cat_line(glue::glue("There were no differences found bewtween {paste0('`', z$meta$names, '`', collapse = ' and ')}"))
     return(invisible())
   }
-  cli::cat_line(pillar::style_subtle(glue::glue("Showing differences in first {n} columns...\n\n")))
+  was_truncated_cols <- if (length(z_tidy) > n) "first " else ""
+  cli::cat_line(pillar::style_subtle(glue::glue("Showing differences in {was_truncated_cols}{n} columns...\n\n")))
   for (i in 1:n) {
     print(z_tidy[[i]])
     cat("\n")
