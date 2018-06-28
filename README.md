@@ -3,7 +3,7 @@
 
 # different
 
-<img align="right" src="man/figures/difference-hexlogo.png" width="250px">
+<img align="right" src="man/figures/different-hexlogo.png" width="250px">
 Tools for comparing and resolving differences between data frames.
 
 ## Installation
