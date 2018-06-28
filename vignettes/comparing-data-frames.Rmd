@@ -110,7 +110,7 @@ y <- corrupt_values(x, dplyr::contains("colname"), n_rows = 20)
 
 Here I additionally remove some columns from each side and change data types
 
-```{r }
+```{r}
 x <- x[, sample(-3:-13, 1)]
 y <- y[, sample(-3:-13, 2)]
 y_ints <- sapply(y, is.integer)
@@ -118,7 +118,11 @@ y_ints[1:2] <- rep(FALSE, 2)
 if (any(y_ints)) {
   y[[which(y_ints)[1]]] <- as.character(y[[which(y_ints)[1]]])
 }
+```
 
+Resulting in two data frames that are similar but unique.
+
+```{r}
 tibble:::print.tbl_df(x)
 tibble:::print.tbl_df(y)
 ```
