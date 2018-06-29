@@ -18,6 +18,7 @@ Imports:
     shiny,
     shinyjs,
     shinytoastr,
+    shinydashboard,
     knitr,
     rmarkdown
 Suggests: 
