@@ -43,8 +43,8 @@ tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, d
   }
 
   # De-factorize into characters
-  x <- mutate_if(x, is.factor, as.character)
-  y <- mutate_if(y, is.factor, as.character)
+  x <- mutate_if(x, is.factor, as.character) %>% tibble::as_tibble()
+  y <- mutate_if(y, is.factor, as.character) %>% tibble::as_tibble()
 
   xt <- purrr::map_dfr(x, ~ data_frame(value = list(.)), .id = "variable")
   yt <- purrr::map_dfr(y, ~ data_frame(value = list(.)), .id = "variable")
