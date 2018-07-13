@@ -20,6 +20,7 @@ knitr::knit_hooks$set(width=local({
         else options(.width)
     }
 }))
+options(knitr.kable.NA = '')
 library(different)
 ```
 
@@ -74,28 +75,9 @@ purrr::map2(
     dplyr::vars(dplyr::starts_with("Type")),
     function(x) ifelse(is.na(x), "\U274C", x)
   ) %>% 
-  knitr::kable(escape = FALSE)
-```
-
-</details>
-
-<details>
-<summary>Differences Summary</summary>
-
-```{r summary-diff}
-df_diff$diff %>% 
-  dplyr::select(-misses) %>% 
-  dplyr::mutate(
-    state = dplyr::case_when(
-      stringr::str_detect(state, "unique_x") ~ paste("unique", df_diff$meta$names[1]),
-      stringr::str_detect(state, "unique_y") ~ paste("unique", df_diff$meta$names[2]),
-      TRUE ~ state
-    ),
-    miss_count = ifelse(is.na(miss_count), "", paste(miss_count))
-  ) %>% 
-  knitr::kable(
-    col.names = c("Column", "Difference", "Number of Differences")
-  )
+  left_join(df_diff$diff[, c("variable", "miss_count")], by = c(Column = "variable")) %>% 
+  rename(`Number of Differences` = miss_count) %>% 
+  knitr::kable(escape = FALSE, )
 ```
 
 </details>
