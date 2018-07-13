@@ -213,7 +213,7 @@ plot.tidy_diff <- function(z) {
         ggplot2::scale_x_discrete(position = "top", expand = c(0.04,0)) +
         ggplot2::theme_minimal() +
         ggplot2::theme(
-          axis.text.x.top = ggplot2::element_text(angle = 45, vjust = 0.5),
+          axis.text.x.top = ggplot2::element_text(angle = 45, vjust = 0, hjust = 0),
           legend.position = "bottom"
         ) +
         ggplot2::labs(x = "Column", y = "Row", color = NULL)
