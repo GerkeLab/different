@@ -38,7 +38,7 @@ df_diff <- params$df_diff
 ```{r summary-dimensions}
 purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
     ~ dplyr::data_frame(Rows = .[1], Columns = .[2]), .id = "Data Set") %>% 
-  knitr::kable()
+  knitr::kable(format.args = list(big.mark = ",", scientific = FALSE))
 ```
 
 </details>
