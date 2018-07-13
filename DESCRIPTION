@@ -1,6 +1,6 @@
 Package: different
 Title: Compare Differences in Data Frames
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R: person("Garrick", "Aden-Buie", email = "Garrick.Aden-Buie@moffitt.org", role = c("aut", "cre"))
 Description: Tools for comparing and resolving differences between data frames.
 License: MIT + file LICENSE
@@ -25,7 +25,8 @@ Imports:
     rmarkdown
 Suggests: 
     testthat,
-    plotly
+    plotly,
+    sessioninfo
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true

@@ -6,7 +6,9 @@ output:
     css: report.css
 params:
   df_diff: NULL
+  df_orig: NULL
   use_plotly: TRUE
+  use_DT: FALSE
 ---
 
 ```{r setup, include=FALSE}
@@ -22,6 +24,18 @@ knitr::knit_hooks$set(width=local({
 }))
 options(knitr.kable.NA = '')
 library(different)
+use_DT <- params$use_DT && requireNamespace("DT", quietly = TRUE)
+if (use_DT) library(DT)
+output_DT <- function(x, filter = "top", ...) {
+  htmltools::tagList(DT::datatable(
+    x, filter = filter, ..., 
+    extensions = 'FixedColumns',
+    options = list(
+      dom = 'Bfrtip',
+      scrollX = TRUE,
+      fixedColumns = TRUE
+    )))
+}
 ```
 
 ```{r diff-from-params, include = FALSE}
@@ -29,14 +43,40 @@ stopifnot(!is.null(df_diff))
 df_diff <- params$df_diff
 ```
 
+<style>
+.different-footer {
+  display: block;
+  position: fixed;
+  bottom: 0%;
+  left: 30%;
+  right: 30%;
+  text-align: center;
+  background-color: #FFFFFFaa;
+}
+</style>
+
+<div class="different-footer">
+[different](https://gerkelab.com/project/different)
+v`r packageVersion("different")`
+</div>
+
 # Differences Report {.tabset}
 
 ## Summary
 
+<div class="panel panel-info">
+<div class="panel-heading">Differences Report</div>
+<div class="panel-body">
+__Reference:__ ``r df_diff$meta$names["x"]``  
+__Comparison:__ ``r df_diff$meta$names["y"]``  
+__Created:__ `r strftime(Sys.time(), "%F %T %Z")`  
+__different:__ v`r packageVersion("different")`
+</div>
+</div>
 
-<details><summary>Dimensions</summary>
+<details><summary>Input Summary</summary>
 ```{r summary-dimensions}
-purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
+purrr::map_dfr(setNames(df_diff$meta$dims, df_diff$meta$names),
     ~ dplyr::data_frame(Rows = .[1], Columns = .[2]), .id = "Data Set") %>% 
   knitr::kable(format.args = list(big.mark = ",", scientific = FALSE))
 ```
@@ -45,7 +85,7 @@ purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
 
 
 <details>
-<summary>Columns</summary>
+<summary>Differences Summary</summary>
 
 ```{r summary-columns}
 purrr::map2(
@@ -82,6 +122,19 @@ purrr::map2(
 
 </details>
 
+<details>
+<summary>Session Info</summary>
+
+```{r summary-session-info, comment="", max.print=150}
+old_opts <- options(max.print = 500)
+if (requireNamespace("sessioninfo", quietly = TRUE)) {
+  sessioninfo::session_info()
+} else sessionInfo()
+options(old_opts)
+```
+
+</details>
+
 ## Visualization
 
 ```{r visualization, out.width="100%"}
@@ -103,10 +156,32 @@ for (colname in names(df_diff$tidy)) {
       "```{r, echo = FALSE}",
       "x <- df_diff$tidy[['{{colname}}']]",
       "colnames(x)[2:3] <- df_diff$meta$names",
-      "x",
-      "```")
+      "if (use_DT) output_DT(x) else x",
+      "```\n\n")
   )
 }
 ```
 
 `r paste(knitr::knit(text = out), collapse = "\n")`
+
+```{r original-data, include=FALSE}
+if (!is.null(params$df_orig)) {
+  orig_knit_chunks <- knitr::knit_expand(
+    text = c(
+      "## Original: {{df_diff$meta$names['x']}}",
+      "",
+      "```{r, echo=FALSE, out.width='100%'}",
+      "if (use_DT) output_DT(params$df_orig$ref) else params$df_orig$ref",
+      "```\n\n",
+      "", 
+      "## Original: {{df_diff$meta$names['y']}}",
+      "",
+      "```{r, echo=FALSE, out.width='100%'}",
+      "if (use_DT) output_DT(params$df_orig$cmp) else params$df_orig$cmp",
+      "```\n\n"
+    )
+  )
+} else orig_knit_chunks <- ""
+```
+
+`r paste(knitr::knit(text = orig_knit_chunks), collapse = "\n")`

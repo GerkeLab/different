@@ -5,8 +5,45 @@
 \title{Differences Report}
 \usage{
 report(reference, comparison, df_names = NULL, outfile = NULL,
-  use_plotly = TRUE, ...)
+  keep_original = FALSE, use_plotly = is.null(outfile),
+  use_DT = is.null(outfile), quiet = TRUE, ...)
+}
+\arguments{
+\item{reference}{\code{<tbl>} Reference data frame or tibble}
+
+\item{comparison}{\code{<tbl>} Comparison data frame or tibble}
+
+\item{df_names}{\code{<chr>} Vector of length two containg the names of the data
+frames that should be displayed in the report}
+
+\item{outfile}{\code{<chr>} Filename (with optional path) to which report should be
+saved. By default writes to temp file and opens in RStudio Viewer pane.}
+
+\item{keep_original}{\code{<lgl>} Should the original data frames be included
+in the report?}
+
+\item{use_plotly}{\code{<lgl>} Should the differences visualization be interactive
+via \link{plotly}? By default this is \code{FALSE} when saving the report to a
+standalone file.}
+
+\item{use_DT}{\code{<lgl>} Should the tables reporting differences be presented as
+an interactive datatable with the \link{DT} package? By default this is \code{FALSE}
+when saving the report to a standalone file.}
+
+\item{...}{Arguments passed on to \code{tidy_diff}
+\describe{
+  \item{ignore}{\code{<chr:NULL>} ID column(s) that are ignored from the differencing}
+  \item{group_vars}{\code{<chr:ignore>} Column names of grouping variables for alignment,
+takes default from \code{ignore}.}
+  \item{align}{\code{<lgl:FALSE>} Should alignmment be performed based on the
+grouping variables or the \code{group_vars} parameter?}
+}}
+}
+\value{
+Invisibly returns path to rendered differences report
 }
 \description{
-Differences Report
+Creates an HTML report for exploring the differences between two data frames
+or tibbles. If \code{outfile} is specified, the report is saved as a standalone
+HTML file that can be shared with others.
 }
