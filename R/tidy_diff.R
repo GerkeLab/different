@@ -333,29 +333,7 @@ align_data_frames <- function(x, y, group_vars = NULL) {
     x <- group_by(x, !!!rlang::syms(group_vars))
     y <- group_by(y, !!!rlang::syms(group_vars))
   } else {
-    # Use groups from grouped_df
-    group_vars <- purrr::map(list(x = x, y = y), dplyr::group_vars)
-
-    # Handle mismatched groups
-    if (length(unique(purrr::map_int(group_vars, length))) != 1) {
-      # If group vars are available in both, use union, else abort
-      group_vars_all <- purrr::reduce(group_vars, union)
-      if (length(setdiff(group_vars_all, union(names(x), names(y)))) == 0) {
-        group_vars <- list(group_vars_all)
-      } else {
-        common <- purrr::reduce(group_vars, intersect)
-        uniq   <- purrr::map(group_vars, setdiff, y = common) %>% purrr::compact()
-        msg    <- glue::glue(
-          "`x` and `y` have group column(s) ", glue::glue_collapse('"{common}"', sep = ", "),
-          " in common but ", glue::glue_collapse(
-            purrr::imap_chr(uniq, ~ glue::glue("`{.y}` has column(s) ", glue::glue_collapse('"{.x}"', sep = ", "))),
-            sep = " and "
-          )
-        )
-        rlang::abort(msg)
-      }
-    }
-    group_vars <- group_vars[[1]]
+    group_vars <- determine_group_vars(x, y)
   }
 
   # Check duplicates in grouping vars
@@ -384,4 +362,30 @@ align_data_frames <- function(x, y, group_vars = NULL) {
       ~ full_join(., row_ids, by = intersect(names(.), names(row_ids))) %>%
         arrange(`_row.z`)
     )
+}
+
+determine_group_vars <- function(x, y) {
+  # Use groups from grouped_df
+  group_vars <- purrr::map(list(x = x, y = y), dplyr::group_vars)
+
+  # Handle mismatched groups
+  if (length(unique(purrr::map_int(group_vars, length))) != 1) {
+    # If group vars are available in both, use union, else abort
+    group_vars_all <- purrr::reduce(group_vars, union)
+    if (length(setdiff(group_vars_all, union(names(x), names(y)))) == 0) {
+      group_vars <- list(group_vars_all)
+    } else {
+      common <- purrr::reduce(group_vars, intersect)
+      uniq   <- purrr::map(group_vars, setdiff, y = common) %>% purrr::compact()
+      msg    <- glue::glue(
+        "`x` and `y` have group column(s) ", glue::glue_collapse('"{common}"', sep = ", "),
+        " in common but ", glue::glue_collapse(
+          purrr::imap_chr(uniq, ~ glue::glue("`{.y}` has column(s) ", glue::glue_collapse('"{.x}"', sep = ", "))),
+          sep = " and "
+        )
+      )
+      rlang::abort(msg)
+    }
+  }
+  group_vars[[1]]
 }
