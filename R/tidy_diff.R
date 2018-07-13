@@ -170,8 +170,8 @@ plot.tidy_diff <- function(z) {
       ., label = glue::glue_data(., "{z$meta$names[1]}: {value.x}\n{z$meta$names[2]}: {value.y}\n"),
       label = paste(label),
       missingness = case_when(
-        is.na(miss_index.x) ~ missingness_names[1],
-        is.na(miss_index.y) ~ missingness_names[2],
+        is.na(value.x) ~ missingness_names[1],
+        is.na(value.y) ~ missingness_names[2],
         TRUE ~ missingness_names[3]
       )
     ) %>%
