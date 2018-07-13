@@ -9,11 +9,15 @@ details summary {
   font-size: 1.25em;
   font-weight: 500;
 }
-details summary:before {
-  font-family: "Consolas";
-  content: "\25b8  ";
+@supports (-moz-appearance:meterbar) and (display:flex) {
+  details summary:before {
+    font-family: "Consolas";
+    content: "\25b8  ";
+  }
 }
-details[open] summary:before {
-  font-family: "Consolas";
-  content: "\25be  ";
+@supports (-moz-appearance:meterbar) and (display:flex) {
+  details[open] summary:before {
+    font-family: "Consolas";
+    content: "\25be  ";
+  }
 }
