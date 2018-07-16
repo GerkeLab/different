@@ -22,7 +22,8 @@ Imports:
     DT,
     skimr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tibble
 Suggests: 
     testthat,
     plotly,
