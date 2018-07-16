@@ -4,8 +4,8 @@
 #' or tibbles. If `outfile` is specified, the report is saved as a standalone
 #' HTML file that can be shared with others.
 #'
-#' @param reference `<tbl>` Reference data frame or tibble
-#' @param comparison `<tbl>` Comparison data frame or tibble
+#' @param x `<tbl>` Reference data frame or tibble
+#' @param y `<tbl>` Comparison data frame or tibble
 #' @param df_names `<chr>` Vector of length two containg the names of the data
 #'   frames that should be displayed in the report
 #' @param outfile `<chr>` Filename (with optional path) to which report should be
@@ -23,8 +23,8 @@
 #' @return Invisibly returns path to rendered differences report
 #' @export
 diff_report <- function(
-  reference,
-  comparison,
+  x,
+  y,
   df_names = NULL,
   outfile = NULL,
   keep_original = FALSE,
@@ -40,7 +40,7 @@ diff_report <- function(
   outdir <- dirname(outfile)
   outfile <- basename(outfile)
 
-  df_diff <- diff_compare(reference, comparison, df_names = df_names, ...)
+  df_diff <- diff_compare(x, y, df_names = df_names, ...)
 
   rpt <- rmarkdown::render(
     input = system.file("report.Rmd", package = "different"),
@@ -49,7 +49,7 @@ diff_report <- function(
     params = list(df_diff = df_diff,
                   use_plotly = use_plotly,
                   use_DT = use_DT,
-                  df_orig = if (keep_original) list(ref = reference, cmp = comparison)
+                  df_orig = if (keep_original) list(x = x, y = y)
     ),
     quiet = quiet
   )

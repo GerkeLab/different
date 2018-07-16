@@ -4,14 +4,14 @@
 \alias{diff_report}
 \title{Differences Report}
 \usage{
-diff_report(reference, comparison, df_names = NULL, outfile = NULL,
-  keep_original = FALSE, use_plotly = is.null(outfile),
-  use_DT = is.null(outfile), quiet = TRUE, ...)
+diff_report(x, y, df_names = NULL, outfile = NULL, keep_original = FALSE,
+  use_plotly = is.null(outfile), use_DT = is.null(outfile), quiet = TRUE,
+  ...)
 }
 \arguments{
-\item{reference}{\code{<tbl>} Reference data frame or tibble}
+\item{x}{\code{<tbl>} Reference data frame or tibble}
 
-\item{comparison}{\code{<tbl>} Comparison data frame or tibble}
+\item{y}{\code{<tbl>} Comparison data frame or tibble}
 
 \item{df_names}{\code{<chr>} Vector of length two containg the names of the data
 frames that should be displayed in the report}

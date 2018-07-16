@@ -170,13 +170,13 @@ if (!is.null(params$df_orig)) {
       "## Original: {{metadata(df_diff)$names['x']}}",
       "",
       "```{r, echo=FALSE, out.width='100%'}",
-      "if (use_DT) output_DT(params$df_orig$ref) else params$df_orig$ref",
+      "if (use_DT) output_DT(params$df_orig$x) else params$df_orig$x",
       "```\n\n",
       "", 
       "## Original: {{metadata(df_diff)$names['y']}}",
       "",
       "```{r, echo=FALSE, out.width='100%'}",
-      "if (use_DT) output_DT(params$df_orig$cmp) else params$df_orig$cmp",
+      "if (use_DT) output_DT(params$df_orig$y) else params$df_orig$y",
       "```\n\n"
     )
   )
