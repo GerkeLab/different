@@ -1,4 +1,4 @@
-cat_glue <- function(...) cli::cat_line(glue::glue(...))
+cat_glue <- function(..., .envir = parent.frame()) cli::cat_line(glue::glue(..., .envir = .envir))
 
 cat_bullet <- function(..., .envir = parent.frame(), bullet = "bullet") {
   cli::cat_bullet(glue::glue(..., .envir = .envir), bullet = bullet)
@@ -34,6 +34,8 @@ wrap_lines <- function(x, indent = 4) {
 
 cat_differences <- function(z) {
   n_differences <- sum(z$miss_count, na.rm = TRUE)
+  n_unique_columns_x <- sum(z$state == "unique_x")
+  n_unique_columns_y <- sum(z$state == "unique_y")
   if (!n_differences) {
     if (n_unique_columns_x + n_unique_columns_y) {
       cat_bullet("There were no differences in overlapping columns between {paste0('`', metadata(z)$names, '`', collapse = ' and ')}", bullet = "tick")

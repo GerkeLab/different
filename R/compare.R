@@ -36,7 +36,12 @@ diff_compare <- function(
     df_names["x"] = rlang::quo_name(rlang::enquo(x))
     df_names["y"] = rlang::quo_name(rlang::enquo(y))
   } else {
-    if (is.null(names(df_names))) names(df_names) <- c("x", "y")
+    if (is.null(names(df_names))) {
+      names(df_names) <- c("x", "y")
+    } else if (!identical(sort(names(df_names)), c("x", "y"))) {
+      rlang::warn("`df_names` is not named with 'x' and 'y', assuming they appear in that order")
+      names(df_names) <- c("x", "y")
+    }
   }
 
   meta <- list()
@@ -52,7 +57,7 @@ diff_compare <- function(
 
   # Check number of rows and address
   if (align || nrow(x) != nrow(y)) {
-    xy <- align_data_frames(x, y, group_vars = group_vars)
+    xy <- align_data_frames(x, y, group_vars = group_vars, df_names)
     x <- xy$x
     y <- xy$y
   }
@@ -274,10 +279,11 @@ summary.diff_tbl <- function(z) {
 #' Align tibbles or data frames using grouping vars
 #'
 #' Uses `group_vars` to find missing rows in `x` or `y` and align final rows.
-align_data_frames <- function(x, y, group_vars = NULL) {
+align_data_frames <- function(x, y, group_vars = NULL, df_names) {
   if (!"grouped_df" %in% union(class(x), class(y))) {
     if (is.null(group_vars)) {
-      rlang::abort("`x` and `y` contain a different number of rows. Use `group_by()` to provide grouping variables to inform alignment.")
+      xy_names <- paste0("`", df_names, "`", collapse = " and ")
+      rlang::abort(paste(xy_names, "contain a different number of rows. Use `group_by()` to provide grouping variables to inform alignment."))
     }
   }
   if (!is.null(group_vars)) {
@@ -289,12 +295,14 @@ align_data_frames <- function(x, y, group_vars = NULL) {
   }
 
   # Check duplicates in grouping vars
-  purrr::imap(list(x = x, y = y), ~ {
-    distinct_rows <- nrow(distinct(.x, !!!rlang::syms(group_vars)))
-    if (nrow(.x) != distinct_rows) {
-      rlang::abort(glue::glue("`{.y}` only has {distinct_rows} distinct rows out of {nrow(.x)} rows"))
-    }
-  })
+  list(x, y) %>%
+    purrr::set_names(nm = df_names[c('x', 'y')]) %>%
+    purrr::imap(., ~ {
+      distinct_rows <- nrow(distinct(.x, !!!rlang::syms(group_vars)))
+      if (nrow(.x) != distinct_rows) {
+        rlang::abort(glue::glue("`{.y}` only has {distinct_rows} distinct rows out of {nrow(.x)} rows"))
+      }
+    })
 
   # Add original row numbers
   xy <- purrr::map(list(x = x, y  = y), ~ ungroup(.))
