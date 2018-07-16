@@ -28,6 +28,7 @@ tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, d
   meta$dims <- purrr::map(list(x = x, y = y), ~ dim(.))
   meta$colnames <- purrr::map(list(x = x, y = y), ~ colnames(.))
   meta$coltypes <- purrr::map(list(x = x, y = y), ~ purrr::map_chr(., ~ class(.)[1]))
+  meta$ignored <- ignore
 
   # Check number of rows and address
   if (align || nrow(x) != nrow(y)) {
@@ -98,12 +99,11 @@ tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, d
     select(., variable, state, miss_count, misses)
   })
 
-  structure(list(
-    tidy   = z_tidy_diff,
-    diff   = z,
-    meta   = meta,
-    ignore = ignore
-  ), class = "tidy_diff")
+  z <- z_tidy_diff %>% purrr::map_df(~ tidyr::nest(., -variable, .key = "diff")) %>% left_join(z, ., by = "variable")
+  attributes(z)$diff_meta <- meta
+  class(z) <- c("diff_tbl", class(tibble::tibble()))
+
+  z
 }
 
 #' @export
