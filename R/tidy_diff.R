@@ -146,6 +146,97 @@ print.tidy_diff <- function(z, n = 5) {
   }
 }
 
+cat_glue <- function(...) cli::cat_line(glue::glue(...))
+cat_bullet <- function(..., .envir = parent.frame(), bullet = "bullet") {
+  cli::cat_bullet(glue::glue(..., .envir = .envir), bullet = bullet)
+}
+subtle <- function(x) crayon::style(x, "#808080")
+
+#' @export
+print.diff_tbl <- function(z) {
+  cli::cat_rule("different")
+  n_differences <- sum(z$miss_count, na.rm = TRUE)
+  n_unique_columns_x <- sum(z$state == "unique_x")
+  n_unique_columns_y <- sum(z$state == "unique_y")
+  if (!n_differences) {
+    if (n_unique_columns_x + n_unique_columns_y) {
+      cat_bullet("There were no differences in overlapping columns between {paste0('`', metadata(z)$names, '`', collapse = ' and ')}", bullet = "tick")
+    } else {
+      cat_bullet("There were no differences found between {paste0('`', metadata(z)$names, '`', collapse = ' and ')}", bullet = "tick")
+    }
+  }
+  cat_bullet("`{metadata(z)$names['x']}` has ",
+             "{crayon::bold(metadata(z)$dims$x[1])} rows and ",
+             "{crayon::bold(metadata(z)$dims$x[2])} cols",
+             if (n_unique_columns_x) ", with {n_unique_columns_x} unique cols" else "")
+
+  if (n_unique_columns_x) {
+    filter(z, state == "unique_x") %>%
+      pull(variable) %>%
+      {glue::glue("`{crayon::bold(.)}`")} %>%
+      glue::glue_collapse(sep = ", ", width = cli::console_width() - 16) %>%
+      subtle() %>%
+      cli::cat_line("  - Unique cols: ", .)
+  }
+
+  cat_bullet("`{metadata(z)$names['y']}` has ",
+             "{crayon::bold(metadata(z)$dims$y[1])} rows and ",
+             "{crayon::bold(metadata(z)$dims$y[2])} cols",
+             if (n_unique_columns_y) ", with {n_unique_columns_y} unique cols" else "")
+
+  if (n_unique_columns_y) {
+    filter(z, state == "unique_y") %>%
+      pull(variable) %>%
+      {glue::glue("`{crayon::bold(.)}`")} %>%
+      glue::glue_collapse(sep = ", ", width = cli::console_width() - 16) %>%
+      subtle() %>%
+      cli::cat_line("  - Unique cols: ", .)
+  }
+
+  overlaps <- filter(z, !grepl("unique", state), !grepl("^_row", variable)) %>%
+    group_by(state) %>%
+    summarize(vars = paste0("`", crayon::bold(variable), "`", collapse = ", "), n = n())
+
+  cat_bullet("There are {crayon::bold(sum(overlaps$n))} columns that appear in both")
+
+  if ("same" %in% overlaps$state) {
+    same_cols <- overlaps %>% filter(state == "same")
+    cli::cat_line(
+      glue::glue("  \U2714 {crayon::bold(same_cols$n)} cols are identical: "),
+      subtle(glue::glue("{same_cols$vars}", width = cli::console_width() - 25))
+    )
+  }
+  if ("diff" %in% overlaps$state) {
+    diff_cols <- overlaps %>% filter(state == "diff")
+    cli::cat_line(
+      glue::glue("  \u2716 {crayon::bold(diff_cols$n)} cols have differences: "),
+      subtle(glue::glue("{diff_cols$vars}", width = cli::console_width() - 25))
+    )
+  }
+
+  if (n_differences) {
+    cat_bullet("There were {crayon::bold(n_differences)} differences ",
+               "across {sum(z$state == 'diff')} cols ",
+               "and {purrr::reduce(z, union) %>% length()} rows",
+               bullet = "pointer")
+  }
+}
+
+#' Get metadata from different object
+#'
+#' Helper to pull out metadata from the difference results object
+#' @export
+metadata <- function(x, ...) UseMethod("metadata", x)
+
+#' @export
+metadata.diff_tbl <- function(z, prop = NULL) {
+  meta <- attributes(z)$diff_meta
+  if (!is.null(prop)) {
+    prop <- match.arg(prop, names(meta))
+    meta[[prop]]
+  } else meta
+}
+
 #' @export
 vis_changed <- function(x, y, ...) {
   z <- tidy_diff(x, y, ...)
