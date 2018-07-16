@@ -22,7 +22,7 @@
 #' @inheritDotParams diff_compare ignore group_vars align tolerance
 #' @return Invisibly returns path to rendered differences report
 #' @export
-report <- function(
+diff_report <- function(
   reference,
   comparison,
   df_names = NULL,
@@ -33,7 +33,6 @@ report <- function(
   quiet = TRUE,
   ...
 ) {
-  stop("Deprecated. Needs to be updated for new `diff_tbl` class.")
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
 
   specified_destination <- !is.null(outfile)
@@ -41,7 +40,7 @@ report <- function(
   outdir <- dirname(outfile)
   outfile <- basename(outfile)
 
-  df_diff <- tidy_diff(reference, comparison, df_names = df_names, ...)
+  df_diff <- diff_compare(reference, comparison, df_names = df_names, ...)
 
   rpt <- rmarkdown::render(
     input = system.file("report.Rmd", package = "different"),

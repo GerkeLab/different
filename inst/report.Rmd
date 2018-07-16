@@ -67,8 +67,8 @@ v`r packageVersion("different")`
 <div class="panel panel-info">
 <div class="panel-heading">Differences Report</div>
 <div class="panel-body">
-__Reference:__ ``r df_diff$meta$names["x"]``  
-__Comparison:__ ``r df_diff$meta$names["y"]``  
+__Reference:__ ``r metadata(df_diff)$names["x"]``  
+__Comparison:__ ``r metadata(df_diff)$names["y"]``  
 __Created:__ `r strftime(Sys.time(), "%F %T %Z")`  
 __different:__ v`r packageVersion("different")`
 </div>
@@ -76,7 +76,7 @@ __different:__ v`r packageVersion("different")`
 
 <details><summary>Input Summary</summary>
 ```{r summary-dimensions}
-purrr::map_dfr(setNames(df_diff$meta$dims, df_diff$meta$names),
+purrr::map_dfr(setNames(metadata(df_diff)$dims, metadata(df_diff)$names),
     ~ dplyr::data_frame(Rows = .[1], Columns = .[2]), .id = "Data Set") %>% 
   knitr::kable(format.args = list(big.mark = ",", scientific = FALSE))
 ```
@@ -88,22 +88,19 @@ purrr::map_dfr(setNames(df_diff$meta$dims, df_diff$meta$names),
 <summary>Differences Summary</summary>
 
 ```{r summary-columns}
-purrr::map2(
-  df_diff$meta$colnames, 
-  df_diff$meta$coltypes, 
-  ~ dplyr::data_frame(Column = .x, Type = .y)
-) %>% 
-  purrr::reduce(
-    full_join, 
-    suffix = paste("", c(df_diff$meta$names[1], df_diff$meta$names[2])),
-    by = "Column"
+df_diff %>% 
+  select(Column = variable, 
+         !! rlang::sym(paste("Type", metadata(df_diff)$names["x"])) := type.x,
+         !! rlang::sym(paste("Type", metadata(df_diff)$names["y"])) := type.y,
+         `Number of Differences` = miss_count
   ) %>% 
+  as_tibble() %>% 
   {
     .x <- .
-    type_var <- paste("Type", df_diff$meta$names[2])
+    type_var <- paste("Type", metadata(df_diff)$names[2])
     if (type_var %in% names(.x)) {
       type_var_y <- rlang::sym(type_var)
-      type_var_x <- rlang::sym(paste("Type", df_diff$meta$names[1]))
+      type_var_x <- rlang::sym(paste("Type", metadata(df_diff)$names[1]))
       dplyr::mutate(
         .x, 
         !!type_var_y := ifelse(!is.na(!!type_var_y) & !is.na(!!type_var_x) & !!type_var_y != !!type_var_x, 
@@ -115,9 +112,7 @@ purrr::map2(
     dplyr::vars(dplyr::starts_with("Type")),
     function(x) ifelse(is.na(x), "\U274C", x)
   ) %>% 
-  left_join(df_diff$diff[, c("variable", "miss_count")], by = c(Column = "variable")) %>% 
-  rename(`Number of Differences` = miss_count) %>% 
-  knitr::kable(escape = FALSE, )
+  knitr::kable(escape = FALSE)
 ```
 
 </details>
@@ -148,14 +143,18 @@ if (params$use_plotly && requireNamespace("plotly", quietly = TRUE)) {
 ## Differences by Column {.tabset .tabset-fade .tabset-pills}
 
 ```{r diffs-by-column, include=FALSE}
-out <- vector(mode = "character", length = length(df_diff$tidy))
-for (colname in names(df_diff$tidy)) {
+diff <- df_diff %>% filter(state == "diff") %>% 
+  select(variable, diff) %>% 
+  split(.$variable) %>% 
+  purrr::map(~ tidyr::unnest(.))
+out <- vector(mode = "character", length = length(diff))
+for (colname in names(diff)) {
   out[[colname]] <- knitr::knit_expand(
     text = c(
       "### {{colname}}",
       "```{r, echo = FALSE}",
-      "x <- df_diff$tidy[['{{colname}}']]",
-      "colnames(x)[2:3] <- df_diff$meta$names",
+      "x <- diff[['{{colname}}']]",
+      "colnames(x)[2:3] <- metadata(df_diff)$names",
       "if (use_DT) output_DT(x) else x",
       "```\n\n")
   )
@@ -168,13 +167,13 @@ for (colname in names(df_diff$tidy)) {
 if (!is.null(params$df_orig)) {
   orig_knit_chunks <- knitr::knit_expand(
     text = c(
-      "## Original: {{df_diff$meta$names['x']}}",
+      "## Original: {{metadata(df_diff)$names['x']}}",
       "",
       "```{r, echo=FALSE, out.width='100%'}",
       "if (use_DT) output_DT(params$df_orig$ref) else params$df_orig$ref",
       "```\n\n",
       "", 
-      "## Original: {{df_diff$meta$names['y']}}",
+      "## Original: {{metadata(df_diff)$names['y']}}",
       "",
       "```{r, echo=FALSE, out.width='100%'}",
       "if (use_DT) output_DT(params$df_orig$cmp) else params$df_orig$cmp",
