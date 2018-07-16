@@ -13,7 +13,16 @@
 #' @return Object of class `tidy_diff` that can be printed via `print(obj)` or
 #'   plotted with [ggplot2] via `plot(obj)`.
 #' @export
-tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, df_names = NULL, tolerance = .Machine$double.eps) {
+tidy_diff <- function(
+  x,
+  y,
+  ignore = NULL,
+  group_vars = ignore,
+  align = FALSE,
+  df_names = NULL,
+  tolerance = .Machine$double.eps,
+  .plain = FALSE
+) {
   # x <- arrange(x, .id)
   if (is.null(df_names)) {
     df_names <- c(x = "",  y = "")
@@ -27,7 +36,11 @@ tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, d
   meta$names <- df_names[c("x", "y")]
   meta$dims <- purrr::map(list(x = x, y = y), ~ dim(.))
   meta$colnames <- purrr::map(list(x = x, y = y), ~ colnames(.))
-  meta$coltypes <- purrr::map(list(x = x, y = y), ~ purrr::map_chr(., ~ class(.)[1]))
+  coltypes <- purrr::map(list(x = x, y = y), ~purrr::map(., ~class(.)[1])) %>%
+    purrr::map_dfr(~., .id = "set") %>%
+    tidyr::gather(variable, type, -set) %>%
+    mutate(set = paste0("type.", set)) %>%
+    tidyr::spread(set, type)
   meta$ignored <- ignore
 
   # Check number of rows and address
@@ -96,14 +109,29 @@ tidy_diff <- function(x, y, ignore = NULL, group_vars = ignore, align = FALSE, d
   }
 
   z <- purrr::map_dfr(z, ~ {
-    select(., variable, state, miss_count, misses)
+    select(., variable, state, miss_count)
   })
 
-  z <- z_tidy_diff %>% purrr::map_df(~ tidyr::nest(., -variable, .key = "diff")) %>% left_join(z, ., by = "variable")
+  z <- if (is.null(z_tidy_diff)) {
+    left_join(coltypes, z, by = "variable") %>%
+      mutate(diff = list(NULL))
+  } else {
+    z_tidy_diff %>%
+      purrr::map_df(~ tidyr::nest(., -variable, .key = "diff")) %>%
+      left_join(z, ., by = "variable") %>%
+      left_join(coltypes, ., by = "variable")
+  }
+  z <- z %>%
+    mutate(state = factor(state, levels = c("diff", "same", "unique_x", "unique_y"))) %>%
+    arrange(state, variable)
   attributes(z)$diff_meta <- meta
-  class(z) <- c("diff_tbl", class(tibble::tibble()))
+  if (!.plain) class(z) <- c("diff_tbl", class(tibble::tibble()))
 
   z
+}
+
+is_diff_tbl <- function(x) {
+  inherits(x, "diff_tbl")
 }
 
 #' @export
@@ -215,11 +243,18 @@ print.diff_tbl <- function(z) {
   }
 
   if (n_differences) {
+    n_diff_rows <- purrr::map(z$diff, "miss_index") %>%
+      purrr::reduce(union) %>% length()
     cat_bullet("There were {crayon::bold(n_differences)} differences ",
                "across {sum(z$state == 'diff')} cols ",
-               "and {purrr::reduce(z, union) %>% length()} rows",
+               "and {n_diff_rows} rows",
                bullet = "pointer")
   }
+}
+
+cat_overlapping_columns <- function(z) {
+  stopifnot(is_diff_tbl(z))
+
 }
 
 #' Get metadata from different object
@@ -323,7 +358,7 @@ not_equal <- function(x, y, tolerance = .Machine$double.eps) {
 }
 
 #' @export
-summary.tidy_diff <- function(z) {
+summary.diff_tbl <- function(z) {
   # 1. Compare dims
   # 2. Column names
   # 3. Column order
@@ -331,18 +366,18 @@ summary.tidy_diff <- function(z) {
   # 5. Number of differing columns
   # 6. Number of differing rows
 
-  x_name <- z$meta$names["x"]
-  y_name <- z$meta$names["y"]
-  x_uniq <- setdiff(z$meta$colnames$x, z$meta$colnames$y)
-  y_uniq <- setdiff(z$meta$colnames$y, z$meta$colnames$x)
-  z_same <- purrr::reduce(z$meta$colnames, intersect)
+  x_name <- metadata(z, "names")["x"]
+  y_name <- metadata(z, "names")["y"]
+  x_uniq <- setdiff(metadata(z, "colnames")$x, metadata(z, "colnames")$y)
+  y_uniq <- setdiff(metadata(z, "colnames")$y, metadata(z, "colnames")$x)
+  z_same <- purrr::reduce(metadata(z, "colnames"), intersect)
 
   capture_tibble_print <- function(x, exclude = c(-1, -3)) {
     x <- capture.output(tibble:::print.tbl(x))[exclude]
     paste0("  ", x, collapse = "\n")
   }
 
-  dims <- purrr::map_dfr(setNames(z$meta$dims, z$meta$names),
+  dims <- purrr::map_dfr(setNames(metadata(z, "dims"), metadata(z, "names")),
     ~ data_frame(rows = .[1], cols = .[2]), .id = "set")
 
   cli::cat_rule("Comparison Summary")
