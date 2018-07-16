@@ -348,6 +348,7 @@ server <- function(df_left, df_right, df_names) {
 #' @param df_right `<tbl|df>` Right tibble or data frame
 #' @export
 compare_df <- function(df_left, df_right, df_names = NULL) {
+    stop("Deprecated. Needs to be updated for new `diff_tbl` class")
     library(shiny)
     library(shinydashboard)
     library(shinyjs)

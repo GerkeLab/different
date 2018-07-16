@@ -30,13 +30,18 @@ standalone file.}
 an interactive datatable with the \link{DT} package? By default this is \code{FALSE}
 when saving the report to a standalone file.}
 
-\item{...}{Arguments passed on to \code{tidy_diff}
+\item{quiet}{\code{TRUE} to suppress printing of the
+  pandoc command line.}
+
+\item{...}{Arguments passed on to \code{diff_compare}
 \describe{
   \item{ignore}{\code{<chr:NULL>} ID column(s) that are ignored from the differencing}
   \item{group_vars}{\code{<chr:ignore>} Column names of grouping variables for alignment,
 takes default from \code{ignore}.}
   \item{align}{\code{<lgl:FALSE>} Should alignmment be performed based on the
 grouping variables or the \code{group_vars} parameter?}
+  \item{tolerance}{\code{<dbl>} The tolerance to be used for comparison of
+numerical values, defaults to \code{.Machine$double.eps}.}
 }}
 }
 \value{

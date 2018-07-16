@@ -1,4 +1,4 @@
-#' Compare Two Data.Frames
+#' Compare Two Data Frames
 #'
 #' Finds row-wise differences in two data frames that are assumed to be
 #' pre-arranged.
@@ -10,10 +10,17 @@
 #'   takes default from `ignore`.
 #' @param align `<lgl:FALSE>` Should alignmment be performed based on the
 #'   grouping variables or the `group_vars` parameter?
-#' @return Object of class `tidy_diff` that can be printed via `print(obj)` or
-#'   plotted with [ggplot2] via `plot(obj)`.
+#' @param df_names `<chr:NULL>` Alternative names for the provided dataframes
+#'   as a vector of length two, to be used during printing and reporting.
+#' @param tolerance `<dbl>` The tolerance to be used for comparison of
+#'   numerical values, defaults to `.Machine$double.eps`.
+#' @param plain `<lgl:FALSE>` If `TRUE`, returns a nested tibble of differences
+#'   without converting these differences to a `diff_tbl` object.
+#' @return Object of class `diff_tbl` that can be printed via `print(diff_obj)` or
+#'   plotted with [ggplot2] via `plot(diff_obj)`. Use `summary(diff_obj)` to view
+#'   a summary of the differences found between `x` and `y`.
 #' @export
-tidy_diff <- function(
+diff_compare <- function(
   x,
   y,
   ignore = NULL,
@@ -21,7 +28,7 @@ tidy_diff <- function(
   align = FALSE,
   df_names = NULL,
   tolerance = .Machine$double.eps,
-  .plain = FALSE
+  plain = FALSE
 ) {
   # x <- arrange(x, .id)
   if (is.null(df_names)) {
@@ -125,7 +132,7 @@ tidy_diff <- function(
     mutate(state = factor(state, levels = c("diff", "same", "unique_x", "unique_y"))) %>%
     arrange(state, variable)
   attributes(z)$diff_meta <- meta
-  if (!.plain) class(z) <- c("diff_tbl", class(dplyr::tibble()))
+  if (!plain) class(z) <- c("diff_tbl", class(dplyr::tibble()))
 
   z
 }

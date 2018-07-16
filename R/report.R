@@ -18,8 +18,8 @@
 #' @param use_DT `<lgl>` Should the tables reporting differences be presented as
 #'   an interactive datatable with the [DT] package? By default this is `FALSE`
 #'   when saving the report to a standalone file.
-#' @inheritParams rmarkdown::render quiet
-#' @inheritDotParams tidy_diff ignore group_vars align tolerance
+#' @inheritParams rmarkdown::render
+#' @inheritDotParams diff_compare ignore group_vars align tolerance
 #' @return Invisibly returns path to rendered differences report
 #' @export
 report <- function(
@@ -33,6 +33,7 @@ report <- function(
   quiet = TRUE,
   ...
 ) {
+  stop("Deprecated. Needs to be updated for new `diff_tbl` class.")
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
 
   specified_destination <- !is.null(outfile)
