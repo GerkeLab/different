@@ -10,6 +10,7 @@ test_that("diff_tbl consistent names metadata", {
   expect_equal(change_names("x", "y"), std_names)
   expect_equal(names(change_names(y = "x", x = "y")), names(std_names))
   expect_equal(change_names("this" = 'x', "that" = 'y'), std_names)
+  expect_warning(change_names("this" = 'x', "that" = 'y'))
   expect_equal(change_names("y" = "this", x = "that"),
                c(x = "that", y = "this"))
 })
