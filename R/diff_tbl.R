@@ -20,11 +20,11 @@ un_diff_tbl <- function(x) {
 }
 
 #' @export
-as_tibble.diff_tbl <- function(x) {
+as_tibble.diff_tbl <- function(x, ...) {
   tibble::as_tibble(un_diff_tbl(x), ...)
 }
 
-as.data.frame.diff_tbl <- function(x) {
+as.data.frame.diff_tbl <- function(x, ...) {
   as.data.frame(un_diff_tbl(x), ...)
 }
 
