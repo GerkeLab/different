@@ -6,6 +6,7 @@ new_diff_tbl <- function(x, metadata = NULL, ..., subclass = NULL) {
     x,
     diff_meta = metadata,
     ...,
+    nrow = length(x$variable),
     subclass = c(subclass, "diff_tbl")
   )
 }
