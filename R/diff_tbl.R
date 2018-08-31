@@ -23,7 +23,7 @@ un_diff_tbl <- function(x) {
 #' @export
 tibble::as_tibble
 
-#' @export
+#' @method as_tibble diff_tbl
 as_tibble.diff_tbl <- function(x, ...) {
   tibble::as_tibble(un_diff_tbl(x), ...)
 }
@@ -32,7 +32,7 @@ as.data.frame.diff_tbl <- function(x, ...) {
   as.data.frame(un_diff_tbl(x), ...)
 }
 
-#' @export
+#' @method print diff_tbl
 print.diff_tbl <- function(z) {
   cat_glue(subtle("<diff_tbl: {paste(metadata(z, 'names'), collapse = ' vs ')}>"))
   cat_differences(z)
@@ -46,7 +46,7 @@ print.diff_tbl <- function(z) {
 #' @export
 metadata <- function(x, ...) UseMethod("metadata", x)
 
-#' @export
+#' @method metadata diff_tbl
 metadata.diff_tbl <- function(z, prop = NULL) {
   meta <- attributes(z)$diff_meta
   if (!is.null(prop)) {
@@ -57,7 +57,7 @@ metadata.diff_tbl <- function(z, prop = NULL) {
 
 # ---- summary ----
 
-#' @export
+#' @method summary diff_tbl
 summary.diff_tbl <- function(z) {
   cli::cat_rule("different: Comparison Summary")
   cat_header("# Dimensions")
@@ -78,7 +78,7 @@ vis_changed <- function(x, y, ...) {
   plot(z)
 }
 
-#' @export
+#' @method plot diff_tbl
 plot.diff_tbl <- function(z) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   x_row_ids <- 1:metadata(z, "dims")$x[1]
