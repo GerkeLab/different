@@ -1,33 +1,35 @@
 Package: different
 Title: Compare Differences in Data Frames
-Version: 0.0.0.9100
-Authors@R: person("Garrick", "Aden-Buie", email = "Garrick.Aden-Buie@moffitt.org", role = c("aut", "cre"))
-Description: Tools for comparing and resolving differences between data frames.
+Version: 0.0.0.9101
+Authors@R: person("Garrick", "Aden-Buie", email =
+        "Garrick.Aden-Buie@moffitt.org", role = c("aut", "cre"))
+Description: Tools for comparing and resolving differences between data
+        frames.
 License: MIT + file LICENSE
 URL: https://github.com/GerkeLab/different
 BugReports: https://github.com/GerkeLab/different/issues
 Imports: 
     cli,
     dplyr,
+    DT,
     glue,
+    knitr,
     magrittr,
     pillar,
     purrr,
     rlang (>= 0.1.2),
-    tidyr,
+    rmarkdown,
     shiny,
+    shinydashboard,
     shinyjs,
     shinytoastr,
-    shinydashboard,
-    DT,
     skimr,
-    knitr,
-    rmarkdown,
-    tibble
+    tibble,
+    tidyr
 Suggests: 
-    testthat,
     plotly,
-    sessioninfo
+    sessioninfo,
+    testthat
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
