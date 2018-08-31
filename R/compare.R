@@ -45,16 +45,13 @@ diff_compare <- function(
     }
   }
 
-  meta <- list()
-  meta$names <- df_names[c("x", "y")]
-  meta$dims <- purrr::map(list(x = x, y = y), ~ dim(.))
-  meta$colnames <- purrr::map(list(x = x, y = y), ~ colnames(.))
+  meta <- new_metadata(x, y, df_names, exclude = exclude)
+
   coltypes <- purrr::map(list(x = x, y = y), ~purrr::map(., ~class(.)[1])) %>%
     purrr::map_dfr(~., .id = "set") %>%
     tidyr::gather(variable, type, -set) %>%
     mutate(set = paste0("type.", set)) %>%
     tidyr::spread(set, type)
-  meta$ignored <- ignore
 
   # Check number of rows and address
   if (align || nrow(x) != nrow(y)) {

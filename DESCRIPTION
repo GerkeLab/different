@@ -1,6 +1,6 @@
 Package: different
 Title: Compare Differences in Data Frames
-Version: 0.0.0.9107
+Version: 0.0.0.9108
 Authors@R: person("Garrick", "Aden-Buie", email =
         "Garrick.Aden-Buie@moffitt.org", role = c("aut", "cre"))
 Description: Tools for comparing and resolving differences between data
