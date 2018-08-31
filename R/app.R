@@ -344,14 +344,14 @@ server <- function(df_left, df_right, df_names) {
 
 #' An App to Compare Two Data Frames
 #'
-#' @param df_left `<tbl|df>` Left tibble or data frame
-#' @param df_right `<tbl|df>` Right tibble or data frame
+#' @param x `<tbl|df>` Left tibble or data frame
+#' @param y `<tbl|df>` Right tibble or data frame
 #' @export
-compare_df <- function(df_left, df_right, df_names = NULL) {
+diff_app <- function(x, y, df_names = NULL) {
     stop("Deprecated. Needs to be updated for new `diff_tbl` class")
     library(shiny)
     library(shinydashboard)
     library(shinyjs)
     df_names <- df_names %||% paste(sys.call())
-    shinyApp(ui = compare_app_ui(), server = server(df_left, df_right, df_names[2:3]))
+    shinyApp(ui = compare_app_ui(), server = server(x, y, df_names[2:3]))
 }
