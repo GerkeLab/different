@@ -7,7 +7,7 @@
 #' @param y `<tbl|df>` Comparison data frame
 #' @param exclude `<chr:NULL>` ID column(s) that are excluded from the
 #'   differencing
-#' @param group_vars `<chr:ignore>` Column names of grouping variables for
+#' @param keys `<chr:ignore>` Column names of grouping variables for
 #'   alignment, takes default from `ignore`.
 #' @param align `<lgl:FALSE>` Should alignmment be performed based on the
 #'   grouping variables or the `group_vars` parameter?
@@ -24,10 +24,10 @@
 diff_compare <- function(
   x,
   y,
-  exclude = NULL,
-  group_vars = exclude,
-  align = FALSE,
   df_names = NULL,
+  exclude = NULL,
+  keys = exclude,
+  align = FALSE,
   tolerance = .Machine$double.eps,
   plain = FALSE
 ) {
@@ -55,7 +55,7 @@ diff_compare <- function(
 
   # Check number of rows and address
   if (align || nrow(x) != nrow(y)) {
-    xy <- align_data_frames(x, y, group_vars = group_vars, df_names)
+    xy <- align_data_frames(x, y, group_vars = keys, df_names)
     x <- xy$x
     y <- xy$y
   }
@@ -176,7 +176,7 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
     purrr::imap(., ~ {
       distinct_rows <- nrow(distinct(.x, !!!rlang::syms(group_vars)))
       if (nrow(.x) != distinct_rows) {
-        rlang::abort(glue::glue("`{.y}` only has {distinct_rows} distinct rows out of {nrow(.x)} rows"))
+        rlang::abort(glue::glue("`{.y}` only has {distinct_rows} distinct keys out of {nrow(.x)} key-pairs"))
       }
     })
 

@@ -36,7 +36,7 @@ when saving the report to a standalone file.}
 \describe{
   \item{exclude}{\code{<chr:NULL>} ID column(s) that are excluded from the
 differencing}
-  \item{group_vars}{\code{<chr:ignore>} Column names of grouping variables for
+  \item{keys}{\code{<chr:ignore>} Column names of grouping variables for
 alignment, takes default from \code{ignore}.}
   \item{align}{\code{<lgl:FALSE>} Should alignmment be performed based on the
 grouping variables or the \code{group_vars} parameter?}

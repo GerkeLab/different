@@ -22,7 +22,7 @@
 #'   an interactive datatable with the [DT] package? By default this is `FALSE`
 #'   when saving the report to a standalone file.
 #' @inheritParams rmarkdown::render
-#' @inheritDotParams diff_compare exclude group_vars align tolerance
+#' @inheritDotParams diff_compare exclude keys align tolerance
 #' @return Invisibly returns path to rendered differences report
 #' @export
 diff_report <- function(
