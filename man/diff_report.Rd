@@ -4,12 +4,12 @@
 \alias{diff_report}
 \title{Differences Report}
 \usage{
-diff_report(z, df_names = NULL, outfile = NULL,
+diff_report(x, df_names = NULL, outfile = NULL,
   keep_original = FALSE, use_plotly = is.null(outfile),
-  use_DT = is.null(outfile), quiet = TRUE, ..., y = NULL)
+  use_DT = is.null(outfile), quiet = TRUE, ..., .y = NULL)
 }
 \arguments{
-\item{z}{\code{<diff_tbl|tbl>} \code{diff_tbl} output from \code{\link[=diff_compare]{diff_compare()}} or the
+\item{x}{\code{<diff_tbl|tbl>} \code{diff_tbl} output from \code{\link[=diff_compare]{diff_compare()}} or the
 reference data frame or tibble.}
 
 \item{df_names}{\code{<chr>} Vector of length two containg the names of the data
@@ -43,9 +43,10 @@ grouping variables or the \code{group_vars} parameter?}
 numerical values, defaults to \code{.Machine$double.eps}.}
 }}
 
-\item{y}{\code{<tbl>} Comparison data frame or tibble}
+\item{.y}{\code{<tbl>} Comparison data frame or tibble}
 
-\item{x}{\code{<tbl>} Original \code{x} data set. Provide only if \code{z} is a \code{diff_tbl}.}
+\item{.x}{\code{<tbl>} Original reference data frame or tibble, provided only if
+\code{x} is a \code{diff_tbl}.}
 }
 \value{
 Invisibly returns path to rendered differences report
