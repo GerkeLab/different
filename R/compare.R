@@ -79,10 +79,10 @@ diff_compare <- function(
       misses     = purrr::map2(value.x, value.y, ~ not_equal(..1, ..2, tolerance)),
       misses     = purrr::pmap(list(misses, value.x, value.y), ~ union(..1, which(xor(is.na(..2), is.na(..3))))),
       misses     = purrr::map(misses, sort),
-      miss_count = purrr::map_int(misses, length),
-      miss_count = ifelse(purrr::map_lgl(value.x, is.null), NA, miss_count),
-      miss_count = ifelse(purrr::map_lgl(value.y, is.null), NA, miss_count),
-      state      = ifelse(miss_count == 0, "same", "diff"),
+      n_diff     = purrr::map_int(misses, length),
+      n_diff     = ifelse(purrr::map_lgl(value.x, is.null), NA, n_diff),
+      n_diff     = ifelse(purrr::map_lgl(value.y, is.null), NA, n_diff),
+      state      = ifelse(n_diff == 0, "same", "diff"),
       state      = ifelse(purrr::map_lgl(value.x, is.null), "unique_y", state),
       state      = ifelse(purrr::map_lgl(value.y, is.null), "unique_x", state),
       state      = ifelse(grepl("^_row\\.", variable), "same", state)             # Manually move row indices to "same" group
@@ -94,7 +94,7 @@ diff_compare <- function(
     z_tidy_diff$value.x <- purrr::map2(z$diff$value.x, z$diff$misses, function(x, y) x[y])
     z_tidy_diff$value.y <- purrr::map2(z$diff$value.y, z$diff$misses, function(x, y) x[y])
     z_tidy_diff <- z_tidy_diff %>%
-      select(-miss_count, -state) %>%
+      select(-n_diff, -state) %>%
       split(.$variable) %>%
       purrr::map(~ {
         tidyr::unnest(.) %>%
@@ -121,7 +121,7 @@ diff_compare <- function(
   }
 
   z <- purrr::map_dfr(z, ~ {
-    select(., variable, state, miss_count)
+    select(., variable, state, n_diff)
   })
 
   z <- if (is.null(z_tidy_diff)) {
