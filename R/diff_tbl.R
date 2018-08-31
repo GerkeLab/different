@@ -19,6 +19,10 @@ un_diff_tbl <- function(x) {
   structure(x, class = setdiff(class(x), "diff_tbl"))
 }
 
+#' @importFrom tibble as_tibble
+#' @export
+tibble::as_tibble
+
 #' @export
 as_tibble.diff_tbl <- function(x, ...) {
   tibble::as_tibble(un_diff_tbl(x), ...)
