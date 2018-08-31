@@ -42,7 +42,7 @@ print.diff_tbl <- function(z) {
 
 #' Get metadata from different object
 #'
-#' Helper to pull out metadata from the difference results object
+#' Helper to pull out metadata from the [diff_tbl] objects output by [diff_compare()].
 #' @export
 metadata <- function(x, ...) UseMethod("metadata", x)
 

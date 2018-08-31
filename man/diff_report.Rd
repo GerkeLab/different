@@ -4,9 +4,9 @@
 \alias{diff_report}
 \title{Differences Report}
 \usage{
-diff_report(x, y, df_names = NULL, outfile = NULL, keep_original = FALSE,
-  use_plotly = is.null(outfile), use_DT = is.null(outfile), quiet = TRUE,
-  ...)
+diff_report(x, y, df_names = NULL, outfile = NULL,
+  keep_original = FALSE, use_plotly = is.null(outfile),
+  use_DT = is.null(outfile), quiet = TRUE, ...)
 }
 \arguments{
 \item{x}{\code{<tbl>} Reference data frame or tibble}

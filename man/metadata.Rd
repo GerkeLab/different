@@ -7,5 +7,5 @@
 metadata(x, ...)
 }
 \description{
-Helper to pull out metadata from the difference results object
+Helper to pull out metadata from the \link{diff_tbl} objects output by \code{\link[=diff_compare]{diff_compare()}}.
 }
