@@ -39,8 +39,8 @@ output_DT <- function(x, filter = "top", ...) {
 ```
 
 ```{r diff-from-params, include = FALSE}
-stopifnot(!is.null(df_diff))
 df_diff <- params$df_diff
+stopifnot(!is.null(df_diff))
 ```
 
 <style>
@@ -92,7 +92,7 @@ df_diff %>%
   select(Column = variable, 
          !! rlang::sym(paste("Type", metadata(df_diff)$names["x"])) := type.x,
          !! rlang::sym(paste("Type", metadata(df_diff)$names["y"])) := type.y,
-         `Number of Differences` = miss_count
+         `Number of Differences` = n_diff
   ) %>% 
   as_tibble() %>% 
   {
@@ -164,7 +164,7 @@ for (colname in names(diff)) {
 `r paste(knitr::knit(text = out), collapse = "\n")`
 
 ```{r original-data, include=FALSE}
-if (!is.null(params$df_orig)) {
+if (!is.null(params$df_orig) && !all(purrr::map_lgl(params$df_orig, is.null))) {
   orig_knit_chunks <- knitr::knit_expand(
     text = c(
       "## Original: {{metadata(df_diff)$names['x']}}",
