@@ -4,35 +4,37 @@
 \alias{diff_compare}
 \title{Compare Two Data Frames}
 \usage{
-diff_compare(x, y, ignore = NULL, group_vars = ignore, align = FALSE,
-  df_names = NULL, tolerance = .Machine$double.eps, plain = FALSE)
+diff_compare(x, y, exclude = NULL, group_vars = exclude,
+  align = FALSE, df_names = NULL, tolerance = .Machine$double.eps,
+  plain = FALSE)
 }
 \arguments{
 \item{x}{\code{<tbl|df>} Reference data frame}
 
 \item{y}{\code{<tbl|df>} Comparison data frame}
 
-\item{ignore}{\code{<chr:NULL>} ID column(s) that are ignored from the differencing}
+\item{exclude}{\code{<chr:NULL>} ID column(s) that are excluded from the
+differencing}
 
-\item{group_vars}{\code{<chr:ignore>} Column names of grouping variables for alignment,
-takes default from \code{ignore}.}
+\item{group_vars}{\code{<chr:ignore>} Column names of grouping variables for
+alignment, takes default from \code{ignore}.}
 
 \item{align}{\code{<lgl:FALSE>} Should alignmment be performed based on the
 grouping variables or the \code{group_vars} parameter?}
 
-\item{df_names}{\code{<chr:NULL>} Alternative names for the provided dataframes
-as a vector of length two, to be used during printing and reporting.}
+\item{df_names}{\code{<chr:NULL>} Alternative names for the provided dataframes as
+a vector of length two, to be used during printing and reporting.}
 
-\item{tolerance}{\code{<dbl>} The tolerance to be used for comparison of
-numerical values, defaults to \code{.Machine$double.eps}.}
+\item{tolerance}{\code{<dbl>} The tolerance to be used for comparison of numerical
+values, defaults to \code{.Machine$double.eps}.}
 
 \item{plain}{\code{<lgl:FALSE>} If \code{TRUE}, returns a nested tibble of differences
 without converting these differences to a \code{diff_tbl} object.}
 }
 \value{
-Object of class \code{diff_tbl} that can be printed via \code{print(diff_obj)} or
-plotted with \link{ggplot2} via \code{plot(diff_obj)}. Use \code{summary(diff_obj)} to view
-a summary of the differences found between \code{x} and \code{y}.
+Object of class \code{diff_tbl} that can be printed via \code{print(diff_obj)}
+or plotted with \link{ggplot2} via \code{plot(diff_obj)}. Use \code{summary(diff_obj)} to
+view a summary of the differences found between \code{x} and \code{y}.
 }
 \description{
 Finds row-wise differences in two data frames that are assumed to be

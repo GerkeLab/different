@@ -5,26 +5,27 @@
 #'
 #' @param x `<tbl|df>` Reference data frame
 #' @param y `<tbl|df>` Comparison data frame
-#' @param ignore `<chr:NULL>` ID column(s) that are ignored from the differencing
-#' @param group_vars `<chr:ignore>` Column names of grouping variables for alignment,
-#'   takes default from `ignore`.
+#' @param exclude `<chr:NULL>` ID column(s) that are excluded from the
+#'   differencing
+#' @param group_vars `<chr:ignore>` Column names of grouping variables for
+#'   alignment, takes default from `ignore`.
 #' @param align `<lgl:FALSE>` Should alignmment be performed based on the
 #'   grouping variables or the `group_vars` parameter?
-#' @param df_names `<chr:NULL>` Alternative names for the provided dataframes
-#'   as a vector of length two, to be used during printing and reporting.
-#' @param tolerance `<dbl>` The tolerance to be used for comparison of
-#'   numerical values, defaults to `.Machine$double.eps`.
+#' @param df_names `<chr:NULL>` Alternative names for the provided dataframes as
+#'   a vector of length two, to be used during printing and reporting.
+#' @param tolerance `<dbl>` The tolerance to be used for comparison of numerical
+#'   values, defaults to `.Machine$double.eps`.
 #' @param plain `<lgl:FALSE>` If `TRUE`, returns a nested tibble of differences
 #'   without converting these differences to a `diff_tbl` object.
-#' @return Object of class `diff_tbl` that can be printed via `print(diff_obj)` or
-#'   plotted with [ggplot2] via `plot(diff_obj)`. Use `summary(diff_obj)` to view
-#'   a summary of the differences found between `x` and `y`.
+#' @return Object of class `diff_tbl` that can be printed via `print(diff_obj)`
+#'   or plotted with [ggplot2] via `plot(diff_obj)`. Use `summary(diff_obj)` to
+#'   view a summary of the differences found between `x` and `y`.
 #' @export
 diff_compare <- function(
   x,
   y,
-  ignore = NULL,
-  group_vars = ignore,
+  exclude = NULL,
+  group_vars = exclude,
   align = FALSE,
   df_names = NULL,
   tolerance = .Machine$double.eps,
@@ -63,9 +64,9 @@ diff_compare <- function(
   }
 
   # Drop ignored columns
-  if (!is.null(ignore)) {
-    x <- x[, intersect(colnames(x), ignore)]
-    y <- y[, intersect(colnames(y), ignore)]
+  if (!is.null(exclude)) {
+    x <- x[, intersect(colnames(x), exclude)]
+    y <- y[, intersect(colnames(y), exclude)]
   }
 
   # De-factorize into characters
