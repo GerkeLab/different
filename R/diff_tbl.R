@@ -57,6 +57,9 @@ metadata.diff_tbl <- function(z, prop = NULL) {
 
 new_metadata <- function(x, y, df_names, ...) {
   stopifnot(inherits(x, "data.frame"), inherits(y, "data.frame"))
+  if (is.null(names(df_names)) && length(df_names) == 2) {
+    names(df_names) <- c("x", "y")
+  }
   if (!"x" %in% names(df_names) || !"y" %in% names(df_names)) {
     if (length(df_names) != 2) stop("df_names must be length 2 or named with 'x' and 'y'")
     names(df_names)[which(!names(df_names) %in% c("x", "y"))] <- setdiff(c("x", "y"), names(df_names))
