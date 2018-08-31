@@ -6,11 +6,11 @@
 #'
 #' @param x `<diff_tbl|tbl>` `diff_tbl` output from [diff_compare()] or the
 #'   reference data frame or tibble.
-#' @param .x `<tbl>` Original reference data frame or tibble, provided only if
-#'   `x` is a `diff_tbl`.
 #' @param .y `<tbl>` Comparison data frame or tibble
 #' @param df_names `<chr>` Vector of length two containg the names of the data
 #'   frames that should be displayed in the report
+#' @param .x `<tbl>` Original reference data frame or tibble, provided only if
+#'   `x` is a `diff_tbl`.
 #' @param outfile `<chr>` Filename (with optional path) to which report should
 #'   be saved. By default writes to temp file and opens in RStudio Viewer pane.
 #' @param keep_original `<lgl>` Should the original data frames be included in

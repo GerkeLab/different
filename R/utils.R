@@ -18,3 +18,13 @@ capture_tibble_print <- function(x, exclude = c(-1, -3), underline = FALSE) {
   x <- x[exclude]
   paste0("  ", x, collapse = "\n")
 }
+
+add_subclass <- function(x, subclass) {
+  class(x) <- c(subclass, class(x))
+  x
+}
+
+remove_subclass <- function(x, subclass) {
+  class(x) <- setdiff(class(x), subclass)
+  x
+}
