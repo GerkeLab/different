@@ -20,5 +20,47 @@ Tools for comparing and resolving differences between data frames.
 ## Installation
 
 ``` r
-devtools::install_github("gerkelab/different")
+devtools::install_github("gerkelab/different@dev")
+```
+
+## Demonstration
+
+```{r include=FALSE}
+source(here::here("tests/test_data.R"))
+x <- example2$x
+y <- example2$y
+```
+
+Suppose you have two data sets that you would like to compare.
+
+```{r}
+x
+```
+
+```{r}
+y
+```
+
+Both have ID columns `id_01` and `id_02`, but we know they will differ in their number of rows and columns and that the rows are unordered.
+
+```{r prompt=TRUE, comment=""}
+z <- different::diff_compare(x, y, group_vars = c("id_01", "id_02"))
+```
+
+```{r prompt=TRUE, comment=""}
+z
+```
+
+```{r prompt=TRUE, comment=""}
+summary(z)
+```
+
+```{r diff_tbl-plot, prompt=TRUE, comment=""}
+plot(z)
+```
+
+You can also create an HTML document reporting all of the found differences with `diff_report()`.
+
+```r
+different::diff_report(x, y, keep_original = TRUE, use_DT = TRUE)
 ```
