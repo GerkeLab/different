@@ -34,6 +34,7 @@ print.diff_pair <- function(z) {
 
 
 #' @method metadata diff_pair
+#' @export
 metadata.diff_pair <- function(z, prop = NULL) {
   meta <- z$diff_meta
   if (!is.null(prop)) {
