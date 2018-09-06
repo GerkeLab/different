@@ -176,7 +176,7 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
     purrr::imap(., ~ {
       distinct_rows <- nrow(distinct(.x, !!!rlang::syms(group_vars)))
       if (nrow(.x) != distinct_rows) {
-        rlang::abort(glue::glue("`{.y}` only has {distinct_rows} distinct keys out of {nrow(.x)} key-pairs"))
+        rlang::abort(glue("`{.y}` only has {distinct_rows} distinct keys out of {nrow(.x)} key-pairs"))
       }
     })
 
@@ -213,10 +213,10 @@ determine_group_vars <- function(x, y) {
     } else {
       common <- purrr::reduce(group_vars, intersect)
       uniq   <- purrr::map(group_vars, setdiff, y = common) %>% purrr::compact()
-      msg    <- glue::glue(
-        "`x` and `y` have group column(s) ", glue::glue_collapse('"{common}"', sep = ", "),
-        " in common but ", glue::glue_collapse(
-          purrr::imap_chr(uniq, ~ glue::glue("`{.y}` has column(s) ", glue::glue_collapse('"{.x}"', sep = ", "))),
+      msg    <- glue(
+        "`x` and `y` have group column(s) ", glue_collapse('"{common}"', sep = ", "),
+        " in common but ", glue_collapse(
+          purrr::imap_chr(uniq, ~ glue("`{.y}` has column(s) ", glue_collapse('"{.x}"', sep = ", "))),
           sep = " and "
         )
       )

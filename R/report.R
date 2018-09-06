@@ -63,6 +63,18 @@ diff_report.diff_tbl <- function(
   .x = NULL,
   .y = NULL
 ) {
+  if (!requireNamespace("knitr", quietly = TRUE))
+    rlang::abort("`diff_report()` requires knitr.")
+  if (!requireNamespace("rmarkdown", quietly = TRUE))
+    rlang::abort("`diff_report()` requires rmarkdown.")
+  if (use_plotly && !requireNamespace("plotly", quietly = TRUE)) {
+    rlang::warn("The plotly package is not available.")
+    use_plotly <- FALSE
+  }
+  if (use_DT && !requireNamespace("DT", quietly = TRUE)) {
+    rlang::warn("The DT package is not available.")
+    use_DT <- FALSE
+  }
   specified_destination <- !is.null(outfile)
   outfile <- outfile %||% tempfile(fileext = ".html")
   outdir <- dirname(outfile)

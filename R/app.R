@@ -257,11 +257,11 @@ server <- function(df_left, df_right, df_names) {
             match_y_input <- make_match_y_input(which_match_y[1])
             updateSelectInput(session, match_y_input, selected = s_var_right)
             if (dup_assignment_left) {
-                shinytoastr::toastr_warning(glue::glue("Replaced previous match for {s_var_left}"),
+                shinytoastr::toastr_warning(glue("Replaced previous match for {s_var_left}"),
                                             position = "top-right", preventDuplicates = TRUE)
             }
             if (dup_assignment_right) {
-                shinytoastr::toastr_warning(glue::glue("Saved match but {s_var_right} now has multiple assignments"),
+                shinytoastr::toastr_warning(glue("Saved match but {s_var_right} now has multiple assignments"),
                                             position = "top-right", preventDuplicates = TRUE)
             }
             if (!dup_assignment_right && !dup_assignment_left) {

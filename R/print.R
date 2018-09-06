@@ -1,7 +1,7 @@
-cat_glue <- function(..., .envir = parent.frame()) cli::cat_line(glue::glue(..., .envir = .envir))
+cat_glue <- function(..., .envir = parent.frame()) cli::cat_line(glue(..., .envir = .envir))
 
 cat_bullet <- function(..., .envir = parent.frame(), bullet = "bullet") {
-  cli::cat_bullet(glue::glue(..., .envir = .envir), bullet = bullet)
+  cli::cat_bullet(glue(..., .envir = .envir), bullet = bullet)
 }
 
 cat_header <- function(x) cli::cat_line(crayon::bold(crayon::cyan(x)))
@@ -45,7 +45,7 @@ cat_differences <- function(z) {
   } else {
     n_diff_rows <- purrr::map(z$diff, "miss_index") %>%
       purrr::reduce(union) %>% length()
-    n_diffs <- glue::glue("{crayon::bold(n_diffs)} differences")
+    n_diffs <- glue("{crayon::bold(n_diffs)} differences")
     cat_bullet("There were {crayon::red(n_diffs)} across {sum(z$state == 'diff')} cols and {n_diff_rows} rows", bullet = "cross")
   }
 }
@@ -70,13 +70,13 @@ cat_overlapping_columns <- function(z) {
   if ("same" %in% overlaps$state) {
     same_cols <- overlaps %>% filter(state == "same")
     noun <- pluralize(same_cols$n, "column")
-    cli::cat_line(crayon::green(glue::glue("  \U2714 {crayon::bold(same_cols$n)} {noun} have identical entries: ")))
+    cli::cat_line(crayon::green(glue("  \U2714 {crayon::bold(same_cols$n)} {noun} have identical entries: ")))
     cat_variable_names(z, "same")
   }
   if ("diff" %in% overlaps$state) {
     diff_cols <- overlaps %>% filter(state == "diff")
     noun <- pluralize(diff_cols$n, "column")
-    cli::cat_line(crayon::red(glue::glue("  \u2716 {crayon::bold(diff_cols$n)} {noun} have differences: ")))
+    cli::cat_line(crayon::red(glue("  \u2716 {crayon::bold(diff_cols$n)} {noun} have differences: ")))
     cat_variable_names(z, "diff", 4)
   }
 }
@@ -84,8 +84,8 @@ cat_overlapping_columns <- function(z) {
 cat_variable_names <- function(z, state = "diff", indent = 4) {
   filter(z, state == !!state) %>%
     pull(variable) %>%
-    {glue::glue("`{crayon::bold(.)}`")} %>%
-    glue::glue_collapse(sep = ", ") %>%
+    {glue("`{crayon::bold(.)}`")} %>%
+    glue_collapse(sep = ", ") %>%
     subtle() %>%
     wrap_lines(indent = indent) %>%
     cat(sep = "")
