@@ -33,6 +33,7 @@ as.data.frame.diff_tbl <- function(x, ...) {
 }
 
 #' @method print diff_tbl
+#' @export
 print.diff_tbl <- function(z) {
   cat_glue(subtle("<diff_tbl: {paste(metadata(z, 'names'), collapse = ' vs ')}>"))
   cat_differences(z)
@@ -76,6 +77,7 @@ new_metadata <- function(x, y, df_names, ...) {
 # ---- summary ----
 
 #' @method summary diff_tbl
+#' @export
 summary.diff_tbl <- function(z) {
   cli::cat_rule("different: Comparison Summary")
   cat_header("# Dimensions")
@@ -97,6 +99,7 @@ vis_changed <- function(x, y, ...) {
 }
 
 #' @method plot diff_tbl
+#' @export
 plot.diff_tbl <- function(z) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   x_row_ids <- 1:metadata(z, "dims")$x[1]

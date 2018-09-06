@@ -26,6 +26,7 @@ new_diff_pair <- function(x, y, df_names = NULL, keys = NULL, ...) {
 
 
 #' @method print diff_pair
+#' @export
 print.diff_pair <- function(z) {
   cat_glue(subtle("<diff_pair: {paste(metadata(z, 'names'), collapse = ' vs ')}>"))
   print(z[c("x", "y")])
