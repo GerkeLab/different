@@ -4,18 +4,20 @@
 #'   a (named) list containing 2 data sets.
 #' @param y `<tbl|matrix>` A data set (`tibble`, `data.frame`, `matrix`) with
 #'   the same class as `x`. `NULL` if `x` is a list.
-#' @export
-diff_pair <- function(x, y = NULL, ...) UseMethod("diff_pair")
-
-#' @rdname diff_pair
 #' @param df_names `<chr>` Names of the two data sets, either ordered or as a named
 #'   vector with names `"x"` and `"y"`
 #' @param keys `<chr>` A character vector listing key columns that link rows in
 #'   each data set to a row in the other.
 #' @export
-diff_pair.data_frame <- function(x, y, df_names = NULL, keys = NULL, ...) {
+diff_pair <- function(x, ...) UseMethod("diff_pair")
+
+#' @rdname diff_pair
+#' @export
+diff_pair.data.frame <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
   if (is.null(y)) rlang::abort("`diff_pair()` requires two data sets.")
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
+  x <- coerce_tibble(x)
+  y <- coerce_tibble(y)
   new_diff_pair(x, y, df_names, keys, ...)
 }
 
@@ -30,6 +32,16 @@ diff_pair.list <- function(x, df_names = names(x), keys = NULL, ...) {
   }
   if (is.null(df_names)) df_names <- glue("{x_name}[[{1:2}]]")
   new_diff_pair(x[[1]], x[[2]], df_names, keys, ...)
+}
+
+#' @rdname diff_pair
+#' @export
+diff_pair.matrix <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
+  if (is.null(y)) rlang::abort("`diff_pair()` requires two data sets.")
+  df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
+  x <- coerce_tibble(x)
+  y <- coerce_tibble(y)
+  new_diff_pair(x, y, df_names, keys, ...)
 }
 
 #' @export
@@ -73,3 +85,19 @@ metadata.diff_pair <- function(z, prop = NULL) {
   } else meta
 }
 
+
+# ---- Helper functions to coerce inputs to tibbles ----
+coerce_tibble <- function(x) {
+  if (inherits(x, "tbl_df")) {
+    if (is.null(rownames(x))) return(x)
+  }
+  if (is.null(colnames(x))) x <- tibble::repair_names(x)
+  row_names <- row.names(x)
+  x <- as_tibble(x)
+  if (!is.null(row_names)) {
+    vars <- names(x)
+    x$`.row.names` <- row_names
+    x <- x[, c(".row.names", vars)]
+  }
+  x
+}

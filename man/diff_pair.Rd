@@ -2,15 +2,20 @@
 % Please edit documentation in R/diff_pair.R
 \name{diff_pair}
 \alias{diff_pair}
-\alias{diff_pair.data_frame}
+\alias{diff_pair.data.frame}
 \alias{diff_pair.list}
+\alias{diff_pair.matrix}
 \title{Pair x and y tables for differencing}
 \usage{
-diff_pair(x, y = NULL, ...)
+diff_pair(x, ...)
 
-\method{diff_pair}{data_frame}(x, y, df_names = NULL, keys = NULL, ...)
+\method{diff_pair}{data.frame}(x, y = NULL, df_names = NULL,
+  keys = NULL, ...)
 
 \method{diff_pair}{list}(x, df_names = names(x), keys = NULL, ...)
+
+\method{diff_pair}{matrix}(x, y = NULL, df_names = NULL, keys = NULL,
+  ...)
 }
 \arguments{
 \item{x}{\code{<tbl|matrix>} A data set (\code{tibble}, \code{data.frame}, \code{matrix}) or a
