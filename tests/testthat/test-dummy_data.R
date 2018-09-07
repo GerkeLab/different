@@ -57,7 +57,7 @@ test_that("factorize returns prime factors", {
   expect_equal(fx, x)
 })
 
-test_that("enough factors does its thing", {
+test_that("enough_factors does its thing", {
   x <- c(2, 2, 3, 5, 7, 13)
   x <- purrr::reduce(x, `*`)
 
@@ -89,8 +89,14 @@ test_that("dummy_data has the right shape", {
   x <- dummy_data(n_col = 10, n_row = 100, n_id_col = 3) # Overspecifying IDs
   expect_equal(n_distinct_rows(x, dplyr::starts_with("id")), 100)
 
-  expect_error(dummy_data(n_id_col = 0))
   expect_error(dummy_data(n_col = 0))
+
+  x <- dummy_data(n_col = 10, n_row = sample(1:500, 1), n_id_col = 0)
+  expect_equal(ncol(x), 10)
+
+  x <- dummy_data(n_row = 10, n_col = 2, types = c("int", "dbl", "fct"))
+  expect_is(x$col_01, "integer")
+  expect_is(x$col_02, "numeric")
 })
 
 test_that("shuffle-corrupted dummy_data still has all keys", {
@@ -102,6 +108,14 @@ test_that("shuffle-corrupted dummy_data still has all keys", {
   x <- dummy_data(n_row = n_row) %>% dummy_corrupt(shuffle = TRUE, dropout = 0.1, paired = FALSE)
   x_n_row <- n_distinct_rows(x, dplyr::starts_with("id"))
   expect_true(dplyr::between(x_n_row, n_row * 0.9, n_row))
+})
+
+test_that("un-shuffled no dropout data isn't shuffled", {
+  x <- dummy_data(n_row = 10, n_col = 2, n_id_col = 1) %>%
+    dummy_corrupt(starts_with("id"), shuffle = FALSE, dropout = 0, paired = TRUE)
+  expect_equal(colnames(x$x), c("id_01", "col_01", "col_02"))
+  expect_equal(colnames(x$y), c("id_01", "col_01", "col_02"))
+  expect_equal(x$x$id_01, x$y$id_01)
 })
 
 test_that("corrupt_type rate works", {

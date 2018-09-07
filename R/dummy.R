@@ -11,10 +11,9 @@ dummy_data <- function(
   id_names = NULL,
   ...
 ) {
-  dummy_add_ids(
-    dummy_data_core(n_row = n_row, n_col = n_col, types = types, ...),
-    n_id_col = n_id_col, id_names = id_names
-  )
+  x <- dummy_data_core(n_row = n_row, n_col = n_col, types = types, ...)
+  if (n_id_col < 1) return(x)
+  dummy_add_ids(x, n_id_col = n_id_col, id_names = id_names)
 }
 
 #' @title Generate Core Dummy Data
