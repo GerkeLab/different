@@ -1,5 +1,12 @@
 context("test-dummy_data")
 
+n_distinct_rows <- function(x, ...) {
+  x %>%
+    dplyr::select(!!!rlang::enexprs(...)) %>%
+    dplyr::distinct() %>%
+    nrow()
+}
+
 test_that("dummy helpers give correct dimensions and class", {
   x_chr <- dummy_chr(10, chr_len = 10)
   x_fct <- dummy_fct(10, fct_n_levels = 6)
@@ -75,12 +82,12 @@ test_that("dummy_data has the right shape", {
     dplyr::count(type)
   expect_equal(y$n, rep(2, 4))
 
-  expect_equal(x %>% select(id_01) %>% distinct() %>% nrow(), 100)
+  expect_equal(n_distinct_rows(x, id_01), 100)
 
   x <- dummy_data(n_col = 10, n_row = 100, n_id_col = 2)
-  expect_equal(x %>% select(starts_with("id")) %>% distinct() %>% nrow(), 100)
+  expect_equal(n_distinct_rows(x, dplyr::starts_with("id")), 100)
   x <- dummy_data(n_col = 10, n_row = 100, n_id_col = 3) # Overspecifying IDs
-  expect_equal(x %>% select(starts_with("id")) %>% distinct() %>% nrow(), 100)
+  expect_equal(n_distinct_rows(x, dplyr::starts_with("id")), 100)
 
   expect_error(dummy_data(n_id_col = 0))
   expect_error(dummy_data(n_col = 0))
@@ -89,11 +96,11 @@ test_that("dummy_data has the right shape", {
 test_that("shuffle-corrupted dummy_data still has all keys", {
   n_row <- 100
   x <- dummy_data(n_row = n_row) %>% dummy_corrupt(shuffle = TRUE, dropout = 0, paired = FALSE)
-  x_n_row <- x %>% select(starts_with("id")) %>% distinct() %>% nrow()
+  x_n_row <- n_distinct_rows(x, dplyr::starts_with("id"))
   expect_equal(x_n_row, n_row)
 
   x <- dummy_data(n_row = n_row) %>% dummy_corrupt(shuffle = TRUE, dropout = 0.1, paired = FALSE)
-  x_n_row <- x %>% select(starts_with("id")) %>% distinct() %>% nrow()
+  x_n_row <- n_distinct_rows(x, dplyr::starts_with("id"))
   expect_true(dplyr::between(x_n_row, n_row * 0.9, n_row))
 })
 
