@@ -2,9 +2,28 @@
 % Please edit documentation in R/diff_pair.R
 \name{diff_pair}
 \alias{diff_pair}
+\alias{diff_pair.data_frame}
+\alias{diff_pair.list}
 \title{Pair x and y tables for differencing}
 \usage{
-diff_pair(x, y, df_names = NULL, keys = NULL, ...)
+diff_pair(x, y = NULL, ...)
+
+\method{diff_pair}{data_frame}(x, y, df_names = NULL, keys = NULL, ...)
+
+\method{diff_pair}{list}(x, df_names = names(x), keys = NULL, ...)
+}
+\arguments{
+\item{x}{\code{<tbl|matrix>} A data set (\code{tibble}, \code{data.frame}, \code{matrix}) or a
+a (named) list containing 2 data sets.}
+
+\item{y}{\code{<tbl|matrix>} A data set (\code{tibble}, \code{data.frame}, \code{matrix}) with
+the same class as \code{x}. \code{NULL} if \code{x} is a list.}
+
+\item{df_names}{\code{<chr>} Names of the two data sets, either ordered or as a named
+vector with names \code{"x"} and \code{"y"}}
+
+\item{keys}{\code{<chr>} A character vector listing key columns that link rows in
+each data set to a row in the other.}
 }
 \description{
 Pair x and y tables for differencing
