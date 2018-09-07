@@ -62,22 +62,29 @@ metadata.diff_tbl <- function(z, prop = NULL) {
   } else meta
 }
 
-new_metadata <- function(x, y, df_names, ...) {
+new_metadata <- function(x, y, df_names, df_class = list(x = class(x), y = class(y)), ...) {
   stopifnot(inherits(x, "data.frame"), inherits(y, "data.frame"))
-  if (is.null(names(df_names)) && length(df_names) == 2) {
-    names(df_names) <- c("x", "y")
-  }
-  if (!"x" %in% names(df_names) || !"y" %in% names(df_names)) {
-    if (length(df_names) != 2) stop("df_names must be length 2 or named with 'x' and 'y'")
-    names(df_names)[which(!names(df_names) %in% c("x", "y"))] <- setdiff(c("x", "y"), names(df_names))
-  }
+  df_names <- xy_named_ordered(df_names)
+  df_class <- xy_named_ordered(df_class)
 
   list(
     names = df_names[c("x", "y")],
+    class = df_class,
     dims = purrr::map(list(x = x, y = y), ~ dim(.)),
     colnames = purrr::map(list(x = x, y = y), ~ colnames(.)),
     ...
   )
+}
+
+xy_named_ordered <- function(x, var_name) {
+  if (is.null(names(x)) && length(x) == 2) {
+    names(x) <- c("x", "y")
+  }
+  if (!"x" %in% names(x) || !"y" %in% names(x)) {
+    if (length(x) != 2) rlang::abort(glue("`{var_name}` must be length 2 or named with 'x' and 'y'"))
+    names(x)[which(!names(x) %in% c("x", "y"))] <- setdiff(c("x", "y"), names(x))
+  }
+  x
 }
 
 # ---- summary ----

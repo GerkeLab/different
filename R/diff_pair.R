@@ -16,9 +16,10 @@ diff_pair <- function(x, ...) UseMethod("diff_pair")
 diff_pair.data.frame <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
   if (is.null(y)) rlang::abort("`diff_pair()` requires two data sets.")
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
+  df_class <- purrr::map(list(x = x, y = y), class)
   x <- coerce_tibble(x)
   y <- coerce_tibble(y)
-  new_diff_pair(x, y, df_names, keys, ...)
+  new_diff_pair(x, y, df_names, keys, df_class = df_class, ...)
 }
 
 #' @rdname diff_pair
@@ -31,7 +32,7 @@ diff_pair.list <- function(x, df_names = names(x), keys = NULL, ...) {
     x <- x[1:2]
   }
   if (is.null(df_names)) df_names <- glue("{x_name}[[{1:2}]]")
-  new_diff_pair(x[[1]], x[[2]], df_names, keys, ...)
+  diff_pair(x[[1]], x[[2]], df_names, keys, ...)
 }
 
 #' @rdname diff_pair
@@ -39,9 +40,10 @@ diff_pair.list <- function(x, df_names = names(x), keys = NULL, ...) {
 diff_pair.matrix <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
   if (is.null(y)) rlang::abort("`diff_pair()` requires two data sets.")
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
+  df_class <- purrr::map(list(x = x, y = y), class)
   x <- coerce_tibble(x)
   y <- coerce_tibble(y)
-  new_diff_pair(x, y, df_names, keys, ...)
+  new_diff_pair(x, y, df_names, keys, df_class = df_class, ...)
 }
 
 #' @export
@@ -49,13 +51,14 @@ diff_pair.default <- function(x, ...) {
   rlang::abort(glue("`diff_pair()` doesn't know how to work with {paste(class(x), collapse = '|')} objects"))
 }
 
-new_diff_pair <- function(x, y, df_names = NULL, keys = NULL, ...) {
+new_diff_pair <- function(x, y, df_names = NULL, keys = NULL,
+                          df_class = list(x = class(x), y = class(y)), ...) {
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
   structure(
     list(
       x = x,
       y = y,
-      diff_meta = new_metadata(x, y, df_names, ...),
+      diff_meta = new_metadata(x, y, df_names, df_class = df_class, ...),
       action = list(
         cols_rename = list(x = NULL, y = NULL),
         cols_select = list(x = NULL, y = NULL),
