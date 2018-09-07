@@ -15,6 +15,7 @@ diff_pair <- function(x, ...) UseMethod("diff_pair")
 #' @export
 diff_pair.data.frame <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
   if (is.null(y)) rlang::abort("`diff_pair()` requires two data sets.")
+  diff_pair_validate_input(x, y)
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
   df_class <- purrr::map(list(x = x, y = y), class)
   x <- coerce_tibble(x)
@@ -39,6 +40,7 @@ diff_pair.list <- function(x, df_names = names(x), keys = NULL, ...) {
 #' @export
 diff_pair.matrix <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
   if (is.null(y)) rlang::abort("`diff_pair()` requires two data sets.")
+  diff_pair_validate_input(x, y)
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
   df_class <- purrr::map(list(x = x, y = y), class)
   x <- coerce_tibble(x)
@@ -48,7 +50,19 @@ diff_pair.matrix <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
 
 #' @export
 diff_pair.default <- function(x, ...) {
-  rlang::abort(glue("`diff_pair()` doesn't know how to work with {paste(class(x), collapse = '|')} objects"))
+  diff_pair_validate_input(x)
+}
+
+diff_pair_validate_input <- function(x, y = NULL) {
+  valid <- c("tbl_df", "data.frame", "matrix")
+  inputs <- list(x = x, y = y) %>% purrr::compact()
+  good <- inputs %>% purrr::map_lgl(inherits, what = valid)
+  if (all(good)) return(invisible(TRUE))
+  verb <- if (length(inputs) == 2) "compare" else "work with"
+  if (length(inputs) == 1) inputs <- inputs[!good]
+  classes <- purrr::map_chr(inputs, ~ paste(class(.), collapse = "|"))
+  classes <- paste(classes, paste0("(", names(classes), ")"), collapse = " to ")
+  rlang::abort(glue("`diff_pair()` doesn't know how to {verb} {classes} objects"))
 }
 
 new_diff_pair <- function(x, y, df_names = NULL, keys = NULL,
@@ -92,7 +106,7 @@ metadata.diff_pair <- function(z, prop = NULL) {
 # ---- Helper functions to coerce inputs to tibbles ----
 coerce_tibble <- function(x) {
   if (inherits(x, "tbl_df")) {
-    if (is.null(rownames(x))) return(x)
+    if (!tibble::has_rownames(x)) return(x)
   }
   if (is.null(colnames(x))) x <- tibble::repair_names(x)
   row_names <- row.names(x)
