@@ -43,11 +43,13 @@ print.diff_cols_common <- function(x) {
 #' @export
 diff_cols_unique <- function(x, ...) UseMethod("diff_cols_unique")
 
+#' @export
 diff_cols_unique.data.frame <- function(x, .y, df_names = NULL, ...) {
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
   diff_cols_unique(diff_pair(x, .y, df_names, ...))
 }
 
+#' @export
 diff_cols_unique.diff_pair <- function(z, ...) {
   uniq_cols <- list(x = c("x", "y"), y = c("y", "x")) %>%
     purrr::map(~ setdiff(metadata(z, "colnames")[[.[1]]], metadata(z, "colnames")[[.[2]]]))
