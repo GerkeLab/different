@@ -40,6 +40,7 @@ diff_report <- function(
 }
 
 #' @method diff_report data.frame
+#' @export
 diff_report.data.frame <- function(.x, .y, df_names = NULL, ...) {
   if (is.null(.y)) {
     rlang::abort("A comparison data.frame must be provided as `.y`")
@@ -52,6 +53,7 @@ diff_report.data.frame <- function(.x, .y, df_names = NULL, ...) {
 }
 
 #' @method diff_report diff_tbl
+#' @export
 diff_report.diff_tbl <- function(
   x,
   outfile = NULL,

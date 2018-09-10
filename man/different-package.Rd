@@ -6,8 +6,8 @@
 \alias{different-package}
 \title{different: Compare Differences in Data Frames}
 \description{
-Tools for comparing and resolving differences between data
-        frames.
+Tools for comparing and resolving differences
+    between data frames.
 }
 \seealso{
 Useful links:
