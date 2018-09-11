@@ -43,7 +43,7 @@ df_diff <- params$df_diff
 stopifnot(!is.null(df_diff))
 ```
 
-<style>
+```{css}
 .different-footer {
   display: block;
   position: fixed;
@@ -53,26 +53,28 @@ stopifnot(!is.null(df_diff))
   text-align: center;
   background-color: #FFFFFFaa;
 }
-</style>
+```
 
-<div class="different-footer">
+::: {.different-footer}
 [different](https://gerkelab.com/project/different)
 v`r packageVersion("different")`
-</div>
+:::
 
 # Differences Report {.tabset}
 
 ## Summary
 
-<div class="panel panel-info">
-<div class="panel-heading">Differences Report</div>
-<div class="panel-body">
+:::::: {.panel .panel-info}
+::: {.panel-heading}
+Differences Report
+:::
+::: {.panel-body}
 __Reference:__ ``r metadata(df_diff)$names["x"]``  
 __Comparison:__ ``r metadata(df_diff)$names["y"]``  
 __Created:__ `r strftime(Sys.time(), "%F %T %Z")`  
 __different:__ v`r packageVersion("different")`
-</div>
-</div>
+:::
+::::::
 
 <details><summary>Input Summary</summary>
 ```{r summary-dimensions}
