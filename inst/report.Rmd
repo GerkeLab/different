@@ -92,8 +92,8 @@ purrr::map_dfr(setNames(metadata(df_diff)$dims, metadata(df_diff)$names),
 ```{r summary-columns}
 df_diff %>% 
   select(Column = variable, 
-         !! rlang::sym(paste("Type", metadata(df_diff)$names["x"])) := type.x,
-         !! rlang::sym(paste("Type", metadata(df_diff)$names["y"])) := type.y,
+         !! sym(paste("Type", metadata(df_diff)$names["x"])) := type.x,
+         !! sym(paste("Type", metadata(df_diff)$names["y"])) := type.y,
          `Number of Differences` = n_diff
   ) %>% 
   as_tibble() %>% 
@@ -101,8 +101,8 @@ df_diff %>%
     .x <- .
     type_var <- paste("Type", metadata(df_diff)$names[2])
     if (type_var %in% names(.x)) {
-      type_var_y <- rlang::sym(type_var)
-      type_var_x <- rlang::sym(paste("Type", metadata(df_diff)$names[1]))
+      type_var_y <- sym(type_var)
+      type_var_x <- sym(paste("Type", metadata(df_diff)$names[1]))
       dplyr::mutate(
         .x, 
         !!type_var_y := ifelse(!is.na(!!type_var_y) & !is.na(!!type_var_x) & !!type_var_y != !!type_var_x, 

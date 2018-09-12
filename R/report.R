@@ -42,7 +42,7 @@ diff_report <- function(
 #' @export
 diff_report.data.frame <- function(.x, .y, df_names = NULL, ...) {
   if (is.null(.y)) {
-    rlang::abort("A comparison data.frame must be provided as `.y`")
+    abort("A comparison data.frame must be provided as `.y`")
   }
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
   args_compare <- list(x = .x, y = .y, df_names = df_names, ...)
@@ -72,15 +72,15 @@ diff_report.diff_tbl <- function(
   .y = NULL
 ) {
   if (!requireNamespace("knitr", quietly = TRUE))
-    rlang::abort("`diff_report()` requires knitr.")
+    abort("`diff_report()` requires knitr.")
   if (!requireNamespace("rmarkdown", quietly = TRUE))
-    rlang::abort("`diff_report()` requires rmarkdown.")
+    abort("`diff_report()` requires rmarkdown.")
   if (use_plotly && !requireNamespace("plotly", quietly = TRUE)) {
-    rlang::warn("The plotly package is not available.")
+    warn("The plotly package is not available.")
     use_plotly <- FALSE
   }
   if (use_DT && !requireNamespace("DT", quietly = TRUE)) {
-    rlang::warn("The DT package is not available.")
+    warn("The DT package is not available.")
     use_DT <- FALSE
   }
   specified_destination <- !is.null(outfile)

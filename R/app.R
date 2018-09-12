@@ -149,7 +149,7 @@ server <- function(df_left, df_right, df_names) {
                 ggplot2::ggplot(df, ggplot2::aes_string(x = var)) +
                     ggplot2::geom_histogram()
             } else {
-                var_sym <- rlang::sym(var)
+                var_sym <- sym(var)
                 df %>%
                     dplyr::group_by(!! var_sym) %>%
                     dplyr::count(sort = TRUE) %>%

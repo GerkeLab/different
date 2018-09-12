@@ -81,7 +81,7 @@ xy_named_ordered <- function(x, var_name) {
     names(x) <- c("x", "y")
   }
   if (!"x" %in% names(x) || !"y" %in% names(x)) {
-    if (length(x) != 2) rlang::abort(glue("`{var_name}` must be length 2 or named with 'x' and 'y'"))
+    if (length(x) != 2) abort(glue("`{var_name}` must be length 2 or named with 'x' and 'y'"))
     names(x)[which(!names(x) %in% c("x", "y"))] <- setdiff(c("x", "y"), names(x))
   }
   x

@@ -10,6 +10,6 @@
 #' @keywords internal
 #' @aliases          quo quos enquo sym syms ensym expr exprs enexpr quo_name
 #' @importFrom rlang quo quos enquo sym syms ensym expr exprs enexpr quo_name
-#' @export           quo quos enquo sym syms ensym expr exprs enexpr quo_name
-#' @importFrom rlang UQ UQS .data :=
+#' @importFrom rlang enquos enexprs abort warn
+#' @importFrom rlang .data :=
 NULL

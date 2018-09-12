@@ -2,7 +2,7 @@ context("test-dummy_data")
 
 n_distinct_rows <- function(x, ...) {
   x %>%
-    dplyr::select(!!!rlang::enexprs(...)) %>%
+    dplyr::select(!!!enexprs(...)) %>%
     dplyr::distinct() %>%
     nrow()
 }

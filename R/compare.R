@@ -34,13 +34,13 @@ diff_compare <- function(
   # x <- arrange(x, .id)
   if (is.null(df_names)) {
     df_names <- c(x = "",  y = "")
-    df_names["x"] = rlang::quo_name(rlang::enquo(x))
-    df_names["y"] = rlang::quo_name(rlang::enquo(y))
+    df_names["x"] = quo_name(enquo(x))
+    df_names["y"] = quo_name(enquo(y))
   } else {
     if (is.null(names(df_names))) {
       names(df_names) <- c("x", "y")
     } else if (!identical(sort(names(df_names)), c("x", "y"))) {
-      rlang::warn("`df_names` is not named with 'x' and 'y', assuming they appear in that order")
+      warn("`df_names` is not named with 'x' and 'y', assuming they appear in that order")
       names(df_names) <- c("x", "y")
     }
   }
@@ -159,13 +159,13 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
   if (!"grouped_df" %in% union(class(x), class(y))) {
     if (is.null(group_vars)) {
       xy_names <- paste0("`", df_names, "`", collapse = " and ")
-      rlang::abort(paste(xy_names, "contain a different number of rows. Use `group_by()` to provide grouping variables to inform alignment."))
+      abort(paste(xy_names, "contain a different number of rows. Use `group_by()` to provide grouping variables to inform alignment."))
     }
   }
   if (!is.null(group_vars)) {
     # Use manually provided groups
-    x <- group_by(x, !!!rlang::syms(group_vars))
-    y <- group_by(y, !!!rlang::syms(group_vars))
+    x <- group_by(x, !!!syms(group_vars))
+    y <- group_by(y, !!!syms(group_vars))
   } else {
     group_vars <- determine_group_vars(x, y)
   }
@@ -174,9 +174,9 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
   list(x, y) %>%
     purrr::set_names(nm = df_names[c('x', 'y')]) %>%
     purrr::imap(., ~ {
-      distinct_rows <- nrow(distinct(.x, !!!rlang::syms(group_vars)))
+      distinct_rows <- nrow(distinct(.x, !!!syms(group_vars)))
       if (nrow(.x) != distinct_rows) {
-        rlang::abort(glue("`{.y}` only has {distinct_rows} distinct keys out of {nrow(.x)} key-pairs"))
+        abort(glue("`{.y}` only has {distinct_rows} distinct keys out of {nrow(.x)} key-pairs"))
       }
     })
 
@@ -188,7 +188,7 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
 
   # Join by IDs and generate new row numbers
   row_ids <- xy %>%
-    purrr::map(~ select(., !!!rlang::syms(group_vars), starts_with("_row"))) %>%
+    purrr::map(~ select(., !!!syms(group_vars), starts_with("_row"))) %>%
     purrr::reduce(full_join, by = group_vars) %>%
     mutate(`_row.z` = 1:nrow(.))
 
@@ -220,7 +220,7 @@ determine_group_vars <- function(x, y) {
           sep = " and "
         )
       )
-      rlang::abort(msg)
+      abort(msg)
     }
   }
   group_vars[[1]]

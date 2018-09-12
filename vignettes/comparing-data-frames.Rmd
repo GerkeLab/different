@@ -90,7 +90,7 @@ add_ids <- function(df, n_ids = NULL) {
 }
 
 corrupt_values <- function(df, ..., n_rows = nrow(df)/5) {
-  vars <- rlang::enexprs(...)
+  vars <- enexprs(...)
   vars <- tidyselect::vars_select(names(df), !!!vars)
   for (var in vars) {
     df[[var]][sample(1:nrow(df), n_rows)] <- sample(df[[var]], n_rows)

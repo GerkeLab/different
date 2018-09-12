@@ -96,7 +96,7 @@ dummy_corrupt <- function(
   dropout_row = dropout,
   paired = TRUE
 ) {
-  vars <- rlang::enexprs(...)
+  vars <- enexprs(...)
   vars <- tidyselect::vars_select(names(df), !!!vars)
   if (length(vars) == 0) vars <- names(df)
   if (!is.null(rx_exclude)) vars <- vars[!grepl(rx_exclude, vars)]
