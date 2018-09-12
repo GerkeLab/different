@@ -39,7 +39,6 @@ diff_report <- function(
   UseMethod("diff_report")
 }
 
-#' @method diff_report data.frame
 #' @export
 diff_report.data.frame <- function(.x, .y, df_names = NULL, ...) {
   if (is.null(.y)) {
@@ -52,7 +51,14 @@ diff_report.data.frame <- function(.x, .y, df_names = NULL, ...) {
   diff_report(df_diff, ..., .x = .x, .y = .y)
 }
 
-#' @method diff_report diff_tbl
+#' @export
+diff_report.diff_pair <- function(x, df_names = NULL, ...){
+  # TODO: Fix with a diff_compare.diff_pair method!
+  df_names <- df_names %||% metadata(x, "names")
+  df_diff <- diff_compare(x$x, x$y, df_names = df_names, keys = x$action$cols_keys)
+  diff_report(df_diff, df_names = df_names, ..., .x = x$x, .y = x$y)
+}
+
 #' @export
 diff_report.diff_tbl <- function(
   x,
