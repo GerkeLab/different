@@ -86,7 +86,7 @@ diff_report.diff_tbl <- function(
     input = system.file("report.Rmd", package = "different"),
     output_file = outfile,
     output_dir = outdir,
-    params = list(df_diff = z,
+    params = list(df_diff = x,
                   use_plotly = use_plotly,
                   use_DT = use_DT,
                   df_orig = if (keep_original) list(x = .x, y = .y)
