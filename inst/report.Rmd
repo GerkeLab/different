@@ -9,6 +9,7 @@ params:
   df_orig: NULL
   use_plotly: TRUE
   use_DT: FALSE
+  notes: NULL
 ---
 
 ```{r setup, include=FALSE}
@@ -116,6 +117,15 @@ df_diff %>%
 ```
 
 </details>
+
+```{r notes, results="asis"}
+if (!is.null(notes)) {
+  cat("\n<details><summary>Notes</summary>")
+  cat("\n")
+  cat(notes, sep = "\n")
+  cat("\n</details>")
+}
+```
 
 <details>
 <summary>Session Info</summary>

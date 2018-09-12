@@ -21,6 +21,8 @@
 #' @param use_DT `<lgl>` Should the tables reporting differences be presented as
 #'   an interactive datatable with the [DT] package? By default this is `FALSE`
 #'   when saving the report to a standalone file.
+#' @param notes `<chr>` A character vector containing notes in markdown format
+#'   to be embedded in the report.
 #' @inheritParams rmarkdown::render
 #' @inheritDotParams diff_compare exclude keys align tolerance
 #' @return Invisibly returns path to rendered differences report
@@ -32,6 +34,7 @@ diff_report <- function(
   keep_original = FALSE,
   use_plotly = is.null(outfile),
   use_DT = is.null(outfile),
+  notes = NULL,
   quiet = TRUE,
   ...,
   .y = NULL
@@ -67,6 +70,7 @@ diff_report.diff_tbl <- function(
   use_plotly = is.null(outfile),
   use_DT = is.null(outfile),
   quiet = TRUE,
+  notes = NULL,
   ...,
   .x = NULL,
   .y = NULL
@@ -95,6 +99,7 @@ diff_report.diff_tbl <- function(
     params = list(df_diff = x,
                   use_plotly = use_plotly,
                   use_DT = use_DT,
+                  notes = notes,
                   df_orig = if (keep_original) list(x = .x, y = .y)
     ),
     quiet = quiet

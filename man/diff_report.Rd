@@ -6,7 +6,8 @@
 \usage{
 diff_report(x, df_names = NULL, outfile = NULL,
   keep_original = FALSE, use_plotly = is.null(outfile),
-  use_DT = is.null(outfile), quiet = TRUE, ..., .y = NULL)
+  use_DT = is.null(outfile), notes = NULL, quiet = TRUE, ...,
+  .y = NULL)
 }
 \arguments{
 \item{x}{\code{<diff_tbl|tbl>} \code{diff_tbl} output from \code{\link[=diff_compare]{diff_compare()}} or the
@@ -28,6 +29,9 @@ standalone file.}
 \item{use_DT}{\code{<lgl>} Should the tables reporting differences be presented as
 an interactive datatable with the \link{DT} package? By default this is \code{FALSE}
 when saving the report to a standalone file.}
+
+\item{notes}{\code{<chr>} A character vector containing notes in markdown format
+to be embedded in the report.}
 
 \item{quiet}{\code{TRUE} to suppress printing of the
   pandoc command line.}
