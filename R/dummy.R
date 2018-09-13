@@ -101,9 +101,9 @@ dummy_corrupt <- function(
   if (length(vars) == 0) vars <- names(df)
   if (!is.null(rx_exclude)) vars <- vars[!grepl(rx_exclude, vars)]
   df2 <- df
-  for (var in vars) {
-    df2[[var]][sample(1:nrow(df2), n_corrupted)] <- sample(df2[[var]], n_corrupted)
-    df2[[var]] <- corrupt_type(df[[var]], corrupt_type_rate)
+  for (var_corrupt in vars) {
+    df2[, var_corrupt] <- corrupt_type(df[[var_corrupt]], corrupt_type_rate)
+    df2[sample(1:nrow(df2), n_corrupted), var_corrupt] <- sample(df2[[var_corrupt]], n_corrupted)
   }
   keep_rows <- sample(1:nrow(df2), nrow(df2) * (1 - dropout_row))
   keep_vars <- setdiff(names(df), vars)
@@ -117,7 +117,8 @@ dummy_corrupt <- function(
   if (paired) diff_pair(df, df2) else df2
 }
 
-corrupt_type <- function(x, rate) {
+corrupt_type <- function(x, rate = 0) {
+  if (rate == 0) return(x)
   if (runif(1) < (1 - rate)) return(x)
   switch(
     class(x)[1],

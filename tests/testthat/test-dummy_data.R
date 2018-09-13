@@ -107,7 +107,7 @@ test_that("shuffle-corrupted dummy_data still has all keys", {
 
   x <- dummy_data(n_row = n_row) %>% dummy_corrupt(shuffle = TRUE, dropout = 0.1, paired = FALSE)
   x_n_row <- n_distinct_rows(x, dplyr::starts_with("id"))
-  expect_true(dplyr::between(x_n_row, n_row * 0.9, n_row))
+  expect_between(x_n_row, n_row * 0.9, n_row)
 })
 
 test_that("un-shuffled no dropout data isn't shuffled", {
@@ -123,5 +123,11 @@ test_that("corrupt_type rate works", {
   expect_equivalent(x[1], 5000)
 
   x <- purrr::map(1:10000, ~ corrupt_type(dummy_fct(10), 0.25)) %>% purrr::map_chr(class) %>% table()
-  expect_true(dplyr::between(x["character"]/sum(x), 0.24, 0.26))
+  expect_between(x["character"]/sum(x), 0.24, 0.26)
+})
+
+test_that("dummy_corrupt returns data with corrupted values", {
+  x <- dummy_corrupt(dummy_data(100, 1), n_corrupted = 10, shuffle = FALSE, dropout = 0, corrupt_type_rate = 0)
+  n_diff <- 100 - sum(purrr::map2_lgl(x$x$col_01, x$y$col_01, identical))
+  expect_between(n_diff, 1, 10)
 })
