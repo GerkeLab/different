@@ -12,10 +12,13 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval = FALSE,
   comment = "#>"
 )
 library(dplyr)
 ```
+
+<!-- TODO FIXME @garrick Update Vignette -->
 
 - [Functions to Create Data](#functions-to-create-fake-data)
 - [Example Data](#example-data)
@@ -103,8 +106,8 @@ corrupt_values <- function(df, ..., n_rows = nrow(df)/5) {
 Here is the fake data with 10 data columns, 2 ID columns and 10^5 rows.
 
 ```{r }
-x <- make_core_fake(10, 10^5) %>%
-  add_ids(n_ids = c(50^4, 300))
+x <- make_core_fake(10, 10^3) %>%
+  add_ids(n_ids = c(50^4, 600))
 y <- corrupt_values(x, dplyr::contains("colname"), n_rows = 20)
 ```
 
@@ -131,7 +134,7 @@ tibble:::print.tbl_df(y)
 We can compare the two data frames with `tidy_diff()`.
 
 ```{r message=FALSE}
-library(grkmisc)
+library(different)
 system.time(
   z <- tidy_diff(x, y)
 )
@@ -185,7 +188,7 @@ x2 <- group_by(x, id_01, id_02) %>% {.[sample(1:nrow(.), floor(nrow(x) * 0.9952)
 y2 <- group_by(y, id_01, id_02) %>% {.[sample(1:nrow(.), floor(nrow(y) * 0.9921)), ]}
 
 ```{r prompt=TRUE, comment=""}
-z2 <- tidy_diff(x2, y2)
+z2 <- diff_compare(x2, y2)
 summary(z2)
 
 z2$diff
