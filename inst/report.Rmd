@@ -132,9 +132,12 @@ if (!is.null(notes)) {
 
 ```{r summary-session-info, comment="", max.print=150}
 old_opts <- options(max.print = 500)
-if (requireNamespace("sessioninfo", quietly = TRUE)) {
-  sessioninfo::session_info()
-} else sessionInfo()
+session_info <- capture.output(
+  if (requireNamespace("sessioninfo", quietly = TRUE)) {
+    sessioninfo::session_info()
+  } else sessionInfo()
+)
+cat(session_info, sep = "\n")
 options(old_opts)
 ```
 
