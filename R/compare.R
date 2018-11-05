@@ -159,7 +159,10 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
   if (!"grouped_df" %in% union(class(x), class(y))) {
     if (is.null(group_vars)) {
       xy_names <- paste0("`", df_names, "`", collapse = " and ")
-      abort(paste(xy_names, "contain a different number of rows. Use `group_by()` to provide grouping variables to inform alignment."))
+      abort(paste(xy_names, "need to be aligned because they contain a",
+                  "different number of rows, but no keys are provided.",
+                  "Specify common key columns using `keys =`, or",
+                  "use `group_by()` to group input data sets by their key columns."))
     }
   }
   if (!is.null(group_vars)) {

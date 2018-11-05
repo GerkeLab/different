@@ -1,10 +1,13 @@
 Package: different
 Title: Compare Differences in Data Frames
-Version: 0.0.0.9132
-Authors@R: person(given = "Garrick", family = "Aden-Buie", role =
-        c("aut", "cre"), email = "Garrick.Aden-Buie@moffitt.org")
-Description: Tools for comparing and resolving differences between data
-        frames.
+Version: 0.0.0.9133
+Authors@R: 
+    person(given = "Garrick",
+           family = "Aden-Buie",
+           role = c("aut", "cre"),
+           email = "Garrick.Aden-Buie@moffitt.org")
+Description: Tools for comparing and resolving differences
+    between data frames.
 License: MIT + file LICENSE
 URL: https://github.com/GerkeLab/different
 BugReports: https://github.com/GerkeLab/different/issues
@@ -30,7 +33,8 @@ Suggests:
     shinytoastr,
     skimr,
     testthat
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
