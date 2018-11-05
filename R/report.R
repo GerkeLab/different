@@ -29,29 +29,29 @@
 #' @export
 diff_report <- function(
   x,
+  y = NULL,
+  ...,
   df_names = NULL,
   outfile = NULL,
   keep_original = FALSE,
   use_plotly = is.null(outfile),
   use_DT = is.null(outfile),
   notes = NULL,
-  quiet = TRUE,
-  ...,
-  .y = NULL
+  quiet = TRUE
 ) {
   UseMethod("diff_report")
 }
 
 #' @export
-diff_report.data.frame <- function(.x, .y, df_names = NULL, ...) {
-  if (is.null(.y)) {
-    abort("A comparison data.frame must be provided as `.y`")
+diff_report.data.frame <- function(.x, y, df_names = NULL, ...) {
+  if (is.null(y)) {
+    abort("A comparison data.frame must be provided as `y`")
   }
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
-  args_compare <- list(x = .x, y = .y, df_names = df_names, ...)
+  args_compare <- list(x = .x, y = y, df_names = df_names, ...)
   args_compare <- args_compare[intersect(names(args_compare), names(formals(diff_compare)))]
   df_diff <- do.call(diff_compare, args_compare)
-  diff_report(df_diff, ..., .x = .x, .y = .y)
+  diff_report(df_diff, ..., .x = .x, y = y)
 }
 
 #' @export

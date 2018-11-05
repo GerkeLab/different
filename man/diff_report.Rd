@@ -4,14 +4,25 @@
 \alias{diff_report}
 \title{Differences Report}
 \usage{
-diff_report(x, df_names = NULL, outfile = NULL,
+diff_report(x, y = NULL, ..., df_names = NULL, outfile = NULL,
   keep_original = FALSE, use_plotly = is.null(outfile),
-  use_DT = is.null(outfile), notes = NULL, quiet = TRUE, ...,
-  .y = NULL)
+  use_DT = is.null(outfile), notes = NULL, quiet = TRUE)
 }
 \arguments{
 \item{x}{\code{<diff_tbl|tbl>} \code{diff_tbl} output from \code{\link[=diff_compare]{diff_compare()}} or the
 reference data frame or tibble.}
+
+\item{...}{Arguments passed on to \code{diff_compare}
+\describe{
+  \item{exclude}{\code{<chr:NULL>} ID column(s) that are excluded from the
+differencing}
+  \item{keys}{\code{<chr:ignore>} Column names of grouping variables for
+alignment, takes default from \code{ignore}.}
+  \item{align}{\code{<lgl:FALSE>} Should alignmment be performed based on the
+grouping variables or the \code{group_vars} parameter?}
+  \item{tolerance}{\code{<dbl>} The tolerance to be used for comparison of numerical
+values, defaults to \code{.Machine$double.eps}.}
+}}
 
 \item{df_names}{\code{<chr>} Vector of length two containg the names of the data
 frames that should be displayed in the report}
@@ -35,18 +46,6 @@ to be embedded in the report.}
 
 \item{quiet}{\code{TRUE} to suppress printing of the
   pandoc command line.}
-
-\item{...}{Arguments passed on to \code{diff_compare}
-\describe{
-  \item{exclude}{\code{<chr:NULL>} ID column(s) that are excluded from the
-differencing}
-  \item{keys}{\code{<chr:ignore>} Column names of grouping variables for
-alignment, takes default from \code{ignore}.}
-  \item{align}{\code{<lgl:FALSE>} Should alignmment be performed based on the
-grouping variables or the \code{group_vars} parameter?}
-  \item{tolerance}{\code{<dbl>} The tolerance to be used for comparison of numerical
-values, defaults to \code{.Machine$double.eps}.}
-}}
 
 \item{.y}{\code{<tbl>} Comparison data frame or tibble}
 
