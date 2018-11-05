@@ -1,6 +1,6 @@
 Package: different
 Title: Compare Differences in Data Frames
-Version: 0.0.0.9133
+Version: 0.0.0.9134
 Authors@R: 
     person(given = "Garrick",
            family = "Aden-Buie",

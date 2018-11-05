@@ -27,7 +27,7 @@ diff_compare <- function(
   df_names = NULL,
   exclude = NULL,
   keys = exclude,
-  align = FALSE,
+  align = !is.null(keys),
   tolerance = .Machine$double.eps,
   plain = FALSE
 ) {
