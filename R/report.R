@@ -11,7 +11,7 @@
 #'   frames that should be displayed in the report
 #' @param .x `<tbl>` Original reference data frame or tibble, provided only if
 #'   `x` is a `diff_tbl`.
-#' @param outfile `<chr>` Filename (with optional path) to which report should
+#' @param output_file `<chr>` Filename (with optional path) to which report should
 #'   be saved. By default writes to temp file and opens in RStudio Viewer pane.
 #' @param keep_original `<lgl>` Should the original data frames be included in
 #'   the report?
@@ -32,10 +32,10 @@ diff_report <- function(
   y = NULL,
   ...,
   df_names = NULL,
-  outfile = NULL,
+  output_file = NULL,
   keep_original = FALSE,
-  use_plotly = is.null(outfile),
-  use_DT = is.null(outfile),
+  use_plotly = is.null(output_file),
+  use_DT = is.null(output_file),
   notes = NULL,
   quiet = TRUE
 ) {
@@ -65,10 +65,10 @@ diff_report.diff_pair <- function(x, df_names = NULL, ...){
 #' @export
 diff_report.diff_tbl <- function(
   x,
-  outfile = NULL,
+  output_file = NULL,
   keep_original = FALSE,
-  use_plotly = is.null(outfile),
-  use_DT = is.null(outfile),
+  use_plotly = is.null(output_file),
+  use_DT = is.null(output_file),
   quiet = TRUE,
   notes = NULL,
   ...,
@@ -87,14 +87,14 @@ diff_report.diff_tbl <- function(
     warn("The DT package is not available.")
     use_DT <- FALSE
   }
-  specified_destination <- !is.null(outfile)
-  outfile <- outfile %||% tempfile(fileext = ".html")
-  outdir <- dirname(outfile)
-  outfile <- basename(outfile)
+  specified_destination <- !is.null(output_file)
+  output_file <- output_file %||% tempfile(fileext = ".html")
+  outdir <- dirname(output_file)
+  output_file <- basename(output_file)
 
   rpt <- rmarkdown::render(
     input = system.file("report.Rmd", package = "different"),
-    output_file = outfile,
+    output_file = output_file,
     output_dir = outdir,
     params = list(df_diff = x,
                   use_plotly = use_plotly,
@@ -107,10 +107,10 @@ diff_report.diff_tbl <- function(
   if (rstudioapi::isAvailable()) {
     rstudioapi::viewer(rpt)
     if (specified_destination) {
-      cli::cat_line("Output saved to ", file.path(outdir, outfile))
+      cli::cat_line("Output saved to ", file.path(outdir, output_file))
     }
   } else {
-    cli::cat_line("Cannot open viewer via RStudio. Report was saved to ", file.path(outdir, outfile))
+    cli::cat_line("Cannot open viewer via RStudio. Report was saved to ", file.path(outdir, output_file))
   }
   invisible(rpt)
 }

@@ -4,9 +4,9 @@
 \alias{diff_report}
 \title{Differences Report}
 \usage{
-diff_report(x, y = NULL, ..., df_names = NULL, outfile = NULL,
-  keep_original = FALSE, use_plotly = is.null(outfile),
-  use_DT = is.null(outfile), notes = NULL, quiet = TRUE)
+diff_report(x, y = NULL, ..., df_names = NULL, output_file = NULL,
+  keep_original = FALSE, use_plotly = is.null(output_file),
+  use_DT = is.null(output_file), notes = NULL, quiet = TRUE)
 }
 \arguments{
 \item{x}{\code{<diff_tbl|tbl>} \code{diff_tbl} output from \code{\link[=diff_compare]{diff_compare()}} or the
@@ -27,7 +27,7 @@ values, defaults to \code{.Machine$double.eps}.}
 \item{df_names}{\code{<chr>} Vector of length two containg the names of the data
 frames that should be displayed in the report}
 
-\item{outfile}{\code{<chr>} Filename (with optional path) to which report should
+\item{output_file}{\code{<chr>} Filename (with optional path) to which report should
 be saved. By default writes to temp file and opens in RStudio Viewer pane.}
 
 \item{keep_original}{\code{<lgl>} Should the original data frames be included in

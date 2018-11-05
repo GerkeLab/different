@@ -18,92 +18,87 @@ Suppose you have two data sets that you would like to compare.
 
 ``` r
 x
-#> # A tibble: 997 x 11
-#> # Groups:   id_01, id_02 [997]
-#>    id_01 id_02 colname_01 colname_02 colname_04 colname_05 colname_06
-#>    <int> <chr>      <dbl>      <int>      <dbl> <fct>      <fct>     
-#>  1   148 maqt…       62.7        -32    26.7    c          a         
-#>  2   397 bfqt…       55.4         38    46.5    b          h         
-#>  3   167 oqxt…       19.7        -33    66.6    c          i         
-#>  4   105 vyfo…       26.5        -41    56.0    a          e         
-#>  5   583 wzzf…       52.8        -26     0.0360 g          a         
-#>  6   693 ykuj…       42.8          2    89.5    f          h         
-#>  7   637 kcxq…       18.2        -29    14.5    d          e         
-#>  8   777 vcsx…       42.7         19    43.0    c          h         
-#>  9   814 mrrz…       73.9         28    69.4    g          d         
-#> 10   933 yusl…       25.2        -44    20.4    j          i         
-#> # ... with 987 more rows, and 4 more variables: colname_07 <chr>,
-#> #   colname_08 <chr>, colname_09 <chr>, colname_10 <fct>
+#> # A tibble: 1,000 x 12
+#>    id_01 id_02 col_01 col_02 col_03 col_04 col_05 col_06 col_07 col_08
+#>    <fct> <fct> <chr>   <dbl>  <int> <fct>  <fct>  <chr>  <chr>   <int>
+#>  1 bl    k     eoavuz  27.7      -9 hh     eo     oltinn vxhzev      2
+#>  2 au    k     fskdcr  90.3      26 dw     hi     eojpbn suxasl    -40
+#>  3 bi    f     dqrixl   8.37     -4 mt     kf     tmyung wiaxob     22
+#>  4 ad    j     tkhgus  93.0      45 lb     ee     xmkuwu vnsauz     -7
+#>  5 ah    r     adylmj  56.0      14 aq     ed     zrjlxc qnbrrg     47
+#>  6 bf    l     paeklq  30.8      36 dc     gw     edqmhl hxcvfl      7
+#>  7 bw    g     kolbvx  98.8      19 ah     kg     jswhwt pnzxms     50
+#>  8 ax    h     bszqag  96.8      35 lw     mt     mzshfp cybgdo     -2
+#>  9 bd    f     tobucc  84.8       4 as     lt     dciduu kyotzv     38
+#> 10 bn    c     yarwco  26.4     -21 br     cz     imdaif ldawva     37
+#> # ... with 990 more rows, and 2 more variables: col_09 <fct>, col_10 <chr>
 ```
 
 ``` r
 y
-#> # A tibble: 993 x 10
-#> # Groups:   id_01, id_02 [993]
-#>    id_01 id_02 colname_01 colname_02 colname_04 colname_06 colname_07
-#>    <int> <chr>      <dbl> <chr>           <dbl> <fct>      <chr>     
-#>  1   489 szgh…       9.58 -35              11.7 f          esuqju    
-#>  2   198 twkh…      61.7  34               59.6 i          zhdoss    
-#>  3   612 ttki…      91.4  7                75.6 h          wbjhhf    
-#>  4   873 dsng…      66.7  41               77.5 h          wsudet    
-#>  5    24 mnzo…      45.2  -32              63.4 h          yamuei    
-#>  6    15 lpzc…      42.6  26               60.4 g          flhcox    
-#>  7   757 ygah…      46.3  -42              36.1 b          xrtzih    
-#>  8   909 dmjd…      23.9  50               92.2 d          lvudci    
-#>  9   717 immn…      17.3  -13              16.0 c          csvjhr    
-#> 10   196 ddzh…       5.07 34               72.8 i          orqjut    
-#> # ... with 983 more rows, and 3 more variables: colname_08 <chr>,
-#> #   colname_09 <chr>, colname_10 <fct>
+#> # A tibble: 995 x 11
+#>    id_01 id_02 col_09 col_03 col_01 col_07 col_02 col_08 col_04 col_06
+#>    <fct> <fct> <chr>   <int> <chr>  <fct>  <chr>   <int> <fct>  <chr> 
+#>  1 bf    a     av         31 aawmxz qwwsco 3.919…    -31 df     nkawia
+#>  2 aw    f     hq        -12 hcdiwf axowcy 70.63…     46 ak     hvmcjj
+#>  3 an    p     il         13 nzdcdm ydynrz 46.06…    -39 bv     bdpqbq
+#>  4 ao    n     ae         48 dqhpji prbrcd 36.49…      7 hz     pjpjqu
+#>  5 bp    d     gg         40 ahuhzg qcofmi 6.779…    -25 fi     ndpcph
+#>  6 bv    o     mn        -35 cexpfa rutchu 76.75…     30 ij     wiczwh
+#>  7 bs    h     ju        -41 msekzp zlbszy 13.69…     43 em     odkupg
+#>  8 bw    n     fn        -33 oanvew vuxhvl 26.98…    -44 hd     lragnf
+#>  9 ar    l     gf         44 gxfmxu shuwso 66.40…    -36 ao     ucuyhr
+#> 10 am    m     il         -4 xvjspm bjoowl 17.52…     -1 ig     zkrxwn
+#> # ... with 985 more rows, and 1 more variable: col_10 <chr>
 ```
 
 Both have ID columns `id_01` and `id_02`, but we know they will differ
-in their number of rows and columns and that the rows are unordered.
+in their number of rows and columns and that the rows are
+unordered.
 
 ``` r
-> z <- different::diff_compare(x, y, group_vars = c("id_01", "id_02"))
+> z <- different::diff_compare(x, y, keys = c("id_01", "id_02"), tolerance = 10^-10)
 ```
 
 ``` r
 > z
 <diff_tbl: x vs y>
-✖ There were 231 differences across 8 cols and 148 rows
+✖ There were 135 differences across 9 cols and 94 rows
 ```
 
 ``` r
 > summary(z)
-── different: Comparison Summary ─────────────────────────────────────────────────────────
+── different: Comparison Summary ───────────────────────────────────────────────────────────────────────────────────────────────
 # Dimensions
     set    rows  cols
     ----- ----- -----
-    x       997    11
-    y       993    10
+    x      1000    12
+    y       995    11
 
 # Columns
 ● 1 column in x is not in y:
-    `colname_05`
-● 10 columns appear in both x and y
+    `col_05`
+● 11 columns appear in both x and y
   ✔ 2 columns have identical entries: 
     `id_01`, `id_02`
-  ✖ 8 columns have differences: 
-    `colname_01`, `colname_02`, `colname_04`, `colname_06`, `colname_07`, `colname_08`, 
-    `colname_09`, 
-    `colname_10`
-
+  ✖ 9 columns have differences: 
+    `col_01`, `col_02`, `col_03`, `col_04`, `col_06`, `col_07`, `col_08`, `col_09`, `col_10`
 # Differences
-✖ There were 231 differences across 8 cols and 148 rows
-    variable   type.x    type.y    state    n_diff diff             
-    -----      -----     -----     -----     ----- ------           
-    colname_01 numeric   numeric   diff         29 <tibble [29 × 7]>
-    colname_02 integer   character diff         30 <tibble [30 × 7]>
-    colname_04 numeric   numeric   diff         30 <tibble [30 × 7]>
-    colname_06 factor    factor    diff         26 <tibble [26 × 7]>
-    colname_07 character character diff         30 <tibble [30 × 7]>
-    colname_08 character character diff         30 <tibble [30 × 7]>
-    colname_09 character character diff         30 <tibble [30 × 7]>
-    colname_10 factor    factor    diff         26 <tibble [26 × 7]>
-    id_01      integer   integer   same          0 <NULL>           
-    id_02      character character same          0 <NULL>           
-    colname_05 factor    <NA>      unique_x     NA <NULL>           
+✖ There were 135 differences across 9 cols and 94 rows
+    variable type.x    type.y    state    n_diff diff             
+    -----    -----     -----     -----     ----- ------           
+    col_01   character character diff         15 <tibble [15 × 7]>
+    col_02   numeric   character diff         15 <tibble [15 × 7]>
+    col_03   integer   integer   diff         15 <tibble [15 × 7]>
+    col_04   factor    factor    diff         15 <tibble [15 × 7]>
+    col_06   character character diff         15 <tibble [15 × 7]>
+    col_07   character factor    diff         15 <tibble [15 × 7]>
+    col_08   integer   integer   diff         15 <tibble [15 × 7]>
+    col_09   factor    character diff         15 <tibble [15 × 7]>
+    col_10   character character diff         15 <tibble [15 × 7]>
+    id_01    factor    factor    same          0 <NULL>           
+    id_02    factor    factor    same          0 <NULL>           
+    col_05   factor    <NA>      unique_x     NA <NULL>           
 ```
 
 ``` r
@@ -118,3 +113,7 @@ differences with `diff_report()`.
 ``` r
 different::diff_report(x, y, keep_original = TRUE, use_DT = TRUE)
 ```
+
+By default the report will open inside the RStudio Viewer pane, but you
+can also explicitly provide a path where the report will be saved using
+the `output_file` argument.

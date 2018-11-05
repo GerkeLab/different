@@ -25,10 +25,12 @@ devtools::install_github("gerkelab/different@dev")
 
 ## Demonstration
 
-```{r include=FALSE}
-source(here::here("tests/test_data.R"))
-x <- example2$x
-y <- example2$y
+```{r, include=FALSE}
+set.seed(4242)
+x <- different::dummy_data(1000, 10)
+y <- different::dummy_corrupt(x, paired = FALSE, n_corrupted = 10, 
+                              dropout_col = 0.1, 
+                              dropout_row = 0.005)
 ```
 
 Suppose you have two data sets that you would like to compare.
@@ -44,7 +46,7 @@ y
 Both have ID columns `id_01` and `id_02`, but we know they will differ in their number of rows and columns and that the rows are unordered.
 
 ```{r prompt=TRUE, comment=""}
-z <- different::diff_compare(x, y, group_vars = c("id_01", "id_02"))
+z <- different::diff_compare(x, y, keys = c("id_01", "id_02"), tolerance = 10^-10)
 ```
 
 ```{r prompt=TRUE, comment=""}
@@ -64,3 +66,5 @@ You can also create an HTML document reporting all of the found differences with
 ```r
 different::diff_report(x, y, keep_original = TRUE, use_DT = TRUE)
 ```
+
+By default the report will open inside the RStudio Viewer pane, but you can also explicitly provide a path where the report will be saved using the `output_file` argument.
