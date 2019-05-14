@@ -159,10 +159,11 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
   if (!"grouped_df" %in% union(class(x), class(y))) {
     if (is.null(group_vars)) {
       xy_names <- paste0("`", df_names, "`", collapse = " and ")
-      abort(paste(xy_names, "need to be aligned because they contain a",
-                  "different number of rows, but no keys are provided.",
-                  "Specify common key columns using `keys =`, or",
-                  "use `group_by()` to group input data sets by their key columns."))
+      abort("{xy_names} need to be aligned because they contain a",
+            "different number of rows, but no keys are provided.",
+            "Specify common key columns using `keys =`, or",
+            "use `group_by()` to group input data sets by their key columns.",
+            .subclass = "diff_compare_needs_aligned")
     }
   }
   if (!is.null(group_vars)) {
@@ -179,7 +180,10 @@ align_data_frames <- function(x, y, group_vars = NULL, df_names) {
     purrr::imap(., ~ {
       distinct_rows <- nrow(distinct(.x, !!!syms(group_vars)))
       if (nrow(.x) != distinct_rows) {
-        abort(glue("`{.y}` only has {distinct_rows} distinct keys out of {nrow(.x)} key-pairs"))
+        abort(
+          "`{.y}` only has {distinct_rows} distinct keys out of {nrow(.x)} key-pairs",
+          .subclass = "diff_compare_duplicated_keys"
+        )
       }
     })
 
@@ -223,7 +227,7 @@ determine_group_vars <- function(x, y) {
           sep = " and "
         )
       )
-      abort(msg)
+      abort(msg, .subclass = "diff_compare_mismatched_key_columns")
     }
   }
   group_vars[[1]]

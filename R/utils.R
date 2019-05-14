@@ -28,3 +28,15 @@ remove_subclass <- function(x, subclass) {
   class(x) <- setdiff(class(x), subclass)
   x
 }
+
+abort <- function(..., .envir = parent.frame(), .subclass = "NULL") {
+  rlang::abort(glue::glue(..., .envir = .envir), .subclass = .subclass)
+}
+
+warn <- function(..., .envir = parent.frame(), .subclass = "NULL") {
+  rlang::warn(glue::glue(..., .envir = .envir), .subclass = .subclass)
+}
+
+inform <- function(..., .envir = parent.frame()) {
+  rlang::inform(glue::glue(..., .envir = .envir))
+}

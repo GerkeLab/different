@@ -10,11 +10,16 @@ diff_pull <- function(x, var = NULL, regexp = NULL) UseMethod("diff_pull")
 
 #' @export
 diff_pull.diff_tbl <- function(x, var = NULL, regexp = NULL) {
-  if (is.null(var) & is.null(regexp)) stop("Please provide one of `var` or `regexp`")
+  if (is.null(var) & is.null(regexp)) abort(
+    "Please provide one of `var` or `regexp`", .subclass = "diff_pull_invalid"
+  )
   vars <- x$variable
   if (!is.null(regexp)) vars <- grep(regexp, vars, perl = TRUE, value = TRUE)
   if (!is.null(var))    vars <- intersect(vars, var)
-  if (!length(vars)) abort("No variables match the input criteria.")
+  if (!length(vars)) abort(
+    "No variables match the input criteria.",
+    .subclass = "diff_pull_vars_not_found"
+  )
   x_value <- sym(paste0("value.", metadata(x, "name")["x"]))
   y_value <- sym(paste0("value.", metadata(x, "name")["y"]))
   v <- x %>%

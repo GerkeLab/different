@@ -48,10 +48,10 @@ test_that("diff_pair gives correct things", {
   expect_warning(diff_pair(m))     # warn for lists length > 2
   expect_error(diff_pair(m$df))    # error when no y
   expect_error(diff_pair(m["df"])) # error when lists length < 2
-  expect_error(diff_pair(m$df, m$df$mpg), regexp = "compare data\\.frame \\(x\\) to numeric")
-  expect_error(diff_pair(m$df$mpg),       regexp = "work with numeric")
-  expect_error(diff_pair(m$df$mpg, m$df), regexp = "work with numeric")
-  expect_error(diff_pair(m$matrix), regexp = "requires two")
+  expect_error(diff_pair(m$df, m$df$mpg), class = "diff_pair_inputs_no_common_type")
+  expect_error(diff_pair(m$df$mpg), class = "diff_pair_inputs_no_common_type")
+  expect_error(diff_pair(m$df$mpg, m$df), class = "diff_pair_inputs_no_common_type")
+  expect_error(diff_pair(m$matrix), class = "diff_pair_invalid_input")
 
   expect_equal(metadata(diff_pair(m$matrix, m$df), "names"), c("x" = "m$matrix", "y" = "m$df"))
   expect_equal(metadata(diff_pair(m[c("matrix", "df")]), "names"), c("x" = "matrix", "y" = "df"))

@@ -44,8 +44,7 @@ when saving the report to a standalone file.}
 \item{notes}{\code{<chr>} A character vector containing notes in markdown format
 to be embedded in the report.}
 
-\item{quiet}{\code{TRUE} to suppress printing of the
-  pandoc command line.}
+\item{quiet}{An option to suppress printing of the pandoc command line.}
 
 \item{.y}{\code{<tbl>} Comparison data frame or tibble}
 

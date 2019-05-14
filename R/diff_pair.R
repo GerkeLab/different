@@ -14,7 +14,12 @@ diff_pair <- function(x, ...) UseMethod("diff_pair")
 #' @rdname diff_pair
 #' @export
 diff_pair.data.frame <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
-  if (is.null(y)) abort("`diff_pair()` requires two data sets.")
+  if (is.null(y)) {
+    abort(
+      "`diff_pair()` requires two data sets.",
+      .subclass = "diff_pair_invalid_input"
+    )
+  }
   diff_pair_validate_input(x, y)
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
   df_class <- purrr::map(list(x = x, y = y), class)
@@ -27,9 +32,14 @@ diff_pair.data.frame <- function(x, y = NULL, df_names = NULL, keys = NULL, ...)
 #' @export
 diff_pair.list <- function(x, df_names = names(x), keys = NULL, ...) {
   x_name <- paste(sys.call())[2]
-  if (length(x) < 2) abort("`diff_pair()` requires a list with two data sets.")
+  if (length(x) < 2) {
+    abort(
+      "`diff_pair()` requires a list with two data sets.",
+      .subclass = "diff_pair_invalid_input"
+    )
+  }
   if (length(x) > 2) {
-    warn(glue("{x_name} contains {length(x)} elements, using only the first two."))
+    warn("{x_name} contains {length(x)} elements, using only the first two.")
     x <- x[1:2]
   }
   if (is.null(df_names)) df_names <- glue("{x_name}[[{1:2}]]")
@@ -39,7 +49,12 @@ diff_pair.list <- function(x, df_names = names(x), keys = NULL, ...) {
 #' @rdname diff_pair
 #' @export
 diff_pair.matrix <- function(x, y = NULL, df_names = NULL, keys = NULL, ...) {
-  if (is.null(y)) abort("`diff_pair()` requires two data sets.")
+  if (is.null(y)) {
+    abort(
+      "`diff_pair()` requires two data sets.",
+      .subclass = "diff_pair_invalid_input"
+    )
+  }
   diff_pair_validate_input(x, y)
   df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
   df_class <- purrr::map(list(x = x, y = y), class)
@@ -62,7 +77,10 @@ diff_pair_validate_input <- function(x, y = NULL) {
   if (length(inputs) == 1) inputs <- inputs[!good]
   classes <- purrr::map_chr(inputs, ~ paste(class(.), collapse = "|"))
   classes <- paste(classes, paste0("(", names(classes), ")"), collapse = " to ")
-  abort(glue("`diff_pair()` doesn't know how to {verb} {classes} objects"))
+  abort(
+    "`diff_pair()` doesn't know how to {verb} {classes} objects",
+    .subclass = "diff_pair_inputs_no_common_type"
+  )
 }
 
 new_diff_pair <- function(x, y, df_names = NULL, keys = NULL,
