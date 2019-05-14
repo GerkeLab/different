@@ -23,6 +23,26 @@
 #' @export
 diff_compare <- function(
   x,
+  y = NULL,
+  df_names = NULL,
+  exclude = NULL,
+  keys = exclude,
+  align = !is.null(keys),
+  tolerance = .Machine$double.eps,
+  plain = FALSE
+) {
+  UseMethod("diff_compare")
+}
+
+#' @export
+diff_compare.diff_pair <- function(z, ...) {
+  # TODO Refactor so that this is the primary work horse
+  diff_compare(x = z$x, y = z$y, df_names = z$diff_meta$names, ...)
+}
+
+#' @export
+diff_compare.default <- function(
+  x,
   y,
   df_names = NULL,
   exclude = NULL,
@@ -31,7 +51,6 @@ diff_compare <- function(
   tolerance = .Machine$double.eps,
   plain = FALSE
 ) {
-  # x <- arrange(x, .id)
   if (is.null(df_names)) {
     df_names <- c(x = "",  y = "")
     df_names["x"] = quo_name(enquo(x))

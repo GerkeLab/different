@@ -4,9 +4,9 @@
 \alias{diff_compare}
 \title{Compare Two Data Frames}
 \usage{
-diff_compare(x, y, df_names = NULL, exclude = NULL, keys = exclude,
-  align = !is.null(keys), tolerance = .Machine$double.eps,
-  plain = FALSE)
+diff_compare(x, y = NULL, df_names = NULL, exclude = NULL,
+  keys = exclude, align = !is.null(keys),
+  tolerance = .Machine$double.eps, plain = FALSE)
 }
 \arguments{
 \item{x}{\code{<tbl|df>} Reference data frame}
