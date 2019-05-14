@@ -33,6 +33,7 @@ Unique columns
 }
 \seealso{
 Other Column match resolvers: \code{\link{diff_cols_common}},
+  \code{\link{diff_cols_match}},
   \code{\link{diff_cols_pmatch}},
   \code{\link{diff_cols_type}}
 }

@@ -40,3 +40,7 @@ warn <- function(..., .envir = parent.frame(), .subclass = "NULL") {
 inform <- function(..., .envir = parent.frame()) {
   rlang::inform(glue::glue(..., .envir = .envir))
 }
+
+is_strictly_list <- function(x) {
+  inherits(x, "list") && class(x)[1] == "list"
+}

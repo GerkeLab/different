@@ -143,3 +143,98 @@ diff_cols_pmatch.diff_pair <- function(z, ...) {
     full_join(tibble(column_y = y_names), by = "column_y")
 }
 
+# ---- diff_cols_match ----
+
+#' @title Match Column Names
+#' @inheritParams diff_cols_common
+#' @inheritDotParams diff_pair
+#' @family Column match resolvers
+#' @export
+diff_cols_match <- function(x, .rename = NULL, ...) UseMethod("diff_cols_match")
+
+#' @export
+diff_cols_match.data.frame <- function(x, .y, df_names = NULL, ...) {
+  df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
+  diff_cols_match(diff_pair(x, .y, df_names, ...))
+}
+
+#' @export
+diff_cols_match.diff_pair <- function(
+  z,
+  .rename = NULL,
+  ...,
+  .method = c("pmatch")
+) {
+  # rename can be...
+  # * list of renaming list(col_in_x = col_in_y)
+  # * data frame with columns "column_x", "column_y"
+  #
+  # dots are col_in_x = col_in_y
+  if (is.null(.rename)) {
+    .rename <- switch(
+      match.arg(.method),
+      "pmatch" = diff_cols_pmatch(z)
+    )
+  }
+
+  if (is_strictly_list(.rename)) {
+    list_only_length_one(.rename, "diff_cols_match_bad_rename_format")
+    .rename <- purrr::imap_dfr(.rename, ~ tibble(column_x = .y, column_y = .x))
+  }
+
+  if (!inherits(.rename, "data.frame")) {
+    abort(
+      ".rename must be a list or data.frame. ",
+      "If `.rename` is a list, elements are formatted: ",
+      "`list(col_name_in_x = 'col_name_in_y')`. ",
+      "If `.rename` is a data.frame, it must have two columns 'column_x' and ",
+      "corresponding name 'column_y'.",
+      .subclass = "diff_cols_match_bad_rename_format"
+    )
+  } else {
+    if (length(setdiff(c("column_x", "column_y"), names(.rename))) != 0) {
+      abort(
+        "`.rename` must have columns 'column_x' and 'column_y' containing ",
+        "column names in `x` ({metadata(z, 'names')['x']}) and ",
+        "respective column names in `y` ({metadata(z, 'names')['y']})",
+        .subclass = "diff_cols_match_bad_rename_format"
+      )
+    }
+  }
+
+  # dots overwrite .rename. warn on clash?
+  dots <- list(...)
+  if (length(dots)) {
+    dots <- purrr::imap_dfr(dots, ~ tibble(column_x = .y, column_y = .x))
+
+    .rename <- bind_rows(
+      dots,
+      anti_join(.rename, dots, by = "column_x")
+    )
+  }
+
+  # can't rename missing values
+  .rename <- filter_at(.rename, quos(column_x, column_y), ~ !is.na(.))
+
+  # TODO: store transformation instead of modifying
+  new_y_names <- purrr::set_names(.rename$column_y, .rename$column_x)
+  z$y <- rename(z$y, !!!new_y_names)
+  z$diff_meta$colnames$y <- colnames(z$y)
+  z
+}
+
+list_only_length_one <- function(x, .subclass = "diff_list_length_must_be_one") {
+  if (!is_strictly_list(x)) return(invisible())
+
+  len_just_one <- purrr::map_lgl(x, ~ length(.) == 1)
+  if (all(len_just_one)) return(invisible(TRUE))
+
+  bad_element <- names(x)[!len_just_one][1]
+  abort(
+    "Rename elements must be length 1. '{bad_element}' had ",
+    "{ifelse(length(x[[bad_element]]) > 1, 'more', 'less')} than ",
+    "one element.",
+    .subclass = .subclass,
+    bad_elements = names(x)[!len_just_one]
+  )
+}
