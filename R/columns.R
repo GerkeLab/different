@@ -101,3 +101,45 @@ print.diff_cols_type <- function(x) {
   colnames(x)[2:3] <- attr(x, "df_names")
   print(remove_subclass(x, "diff_cols_type"))
 }
+
+# ---- diff_cols_pmatch ----
+
+#' @title Use Partial Matching to Find Common Column Names
+#' @inheritParams diff_cols_common
+#' @inheritDotParams diff_pair
+#' @family Column match resolvers
+#' @export
+diff_cols_pmatch <- function(x, ...) UseMethod("diff_cols_pmatch")
+
+#' @export
+diff_cols_pmatch.data.frame <- function(x, .y, df_names = NULL, ...) {
+  df_names <- df_names[1:2] %||% paste(sys.call())[2:3]
+  diff_cols_pmatch(diff_pair(x, .y, df_names, ...))
+}
+
+#' @export
+diff_cols_pmatch.diff_pair <- function(z, ...) {
+  x_names <- names(z$x)
+  y_names <- names(z$y)
+  idx_x2y_match <- pmatch(x_names, y_names, duplicates.ok = TRUE)
+  idx_y2x_match <- pmatch(y_names, x_names, duplicates.ok = TRUE)
+
+  xy_matches <- tibble(
+    column_x = x_names,
+    column_y = y_names[idx_x2y_match]
+  ) %>%
+    filter(!is.na(column_y))
+
+  yx_matches <- tibble(
+    column_y = y_names,
+    column_x = x_names[idx_y2x_match]
+  ) %>%
+    filter(!is.na(column_x)) %>%
+    # prefer matches from `x` columns
+    anti_join(xy_matches, by = "column_x")
+
+  bind_rows(xy_matches, yx_matches) %>%
+    full_join(tibble(column_x = x_names), by = "column_x") %>%
+    full_join(tibble(column_y = y_names), by = "column_y")
+}
+

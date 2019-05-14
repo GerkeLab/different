@@ -37,7 +37,9 @@ frames that should be displayed in the report}
 Common columns
 }
 \seealso{
-Other Column match resolvers: \code{\link{diff_cols_type}},
+Other Column match resolvers: \code{\link{diff_cols_match}},
+  \code{\link{diff_cols_pmatch}},
+  \code{\link{diff_cols_type}},
   \code{\link{diff_cols_unique}}
 }
 \concept{Column match resolvers}
